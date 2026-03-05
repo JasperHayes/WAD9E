@@ -1,3 +1,7 @@
 from django.contrib import admin
+from GUSpeedruns.models import UserProfile, Game, Run, Comment
 
-# Register your models here.
+admin.site.register(UserProfile)
+admin.site.register(Game)
+admin.site.register(Run)
+admin.site.register(Comment)
