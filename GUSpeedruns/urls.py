@@ -3,6 +3,7 @@ from GUSpeedruns import views
 
 app_name = 'GUSpeedruns'
 
-url_patterns = [
+urlpatterns = [
     path('', views.homepage, name = "homepage"),
+    path('about/', views.about, name = "about"),
 ]

@@ -21,5 +21,5 @@ from GUSpeedruns import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.homepage, name = 'homepage'),
-    #path('GUSpeedruns/', include('GUSpeedruns.urls')),
+    path('GUSpeedruns/', include('GUSpeedruns.urls')),
 ]
