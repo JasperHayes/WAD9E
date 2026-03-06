@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 def homepage(request):
-    response = render(request, 'GUSPeedruns/homepage.html')
+    response = render(request, 'GUSpeedruns/homepage.html')
     return(response)
 
 def about(request):
