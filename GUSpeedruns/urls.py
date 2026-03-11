@@ -9,4 +9,5 @@ urlpatterns = [
     path('game/upload/', views.upload_game, name='upload_game'),
     path('<slug:game_name_slug>/<int:run_id>/comments/', views.comments, name = "comments"),
     path('<slug:game_name_slug>/<int:run_id>/comments/add_comment', views.add_comment, name = "add_comment"),
+    path('register/', views.register, name='register'),
 ]

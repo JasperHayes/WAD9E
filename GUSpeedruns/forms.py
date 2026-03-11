@@ -1,6 +1,6 @@
 from django import forms
-from GUSpeedruns.models import Game
-from GUSpeedruns.models import Comment
+from django.contrib.auth.models import User
+from GUSpeedruns.models import Game, Comment, UserProfile
 
 class UploadGameForm(forms.ModelForm):
     name = forms.CharField(max_length=Game.NAME_MAX_LENGTH, help_text="Please enter the game name.")
@@ -25,3 +25,15 @@ class CommentForm(forms.ModelForm):
     class Meta: 
         model = Comment
         fields = ['title', 'content']
+        
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+    
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password',)
+        
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('website', 'picture',)
