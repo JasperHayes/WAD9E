@@ -38,12 +38,13 @@ def comments(request, game_name_slug, run_id):
         
         context_dict['run'] = run
         context_dict['comments'] = comments
+        context_dict['game_name_slug'] = game_name_slug # needed for the URL tag for add comment
     
     except Run.DoesNotExist:
         context_dict['run'] = None
         context_dict['comments'] = None
         
-    response = render(request, 'GUSpeedruns/comments.html')
+    return render(request, 'GUSpeedruns/comments.html', context=context_dict)
 
 @login_required
 def add_comment(request, game_name_slug, run_id):
@@ -64,7 +65,7 @@ def add_comment(request, game_name_slug, run_id):
                 comment.user = request.user
                 comment.save()
                     
-                return redirect(reverse('GUSpeedruns:show_comments',
+                return redirect(reverse('GUSpeedruns:comments',
                         kwargs={'game_name_slug': game_name_slug,
                                 'run_id': run_id}))
         
