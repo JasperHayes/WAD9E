@@ -4,9 +4,11 @@ from GUSpeedruns.forms import UploadGameForm
 from GUSpeedruns.forms import CommentForm
 from GUSpeedruns.models import Game
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponse
+from django.urls import reverse
 from GUSpeedruns.models import Run
 from GUSpeedruns.models import Comment
-from django.urls import reverse
 
 def homepage(request):
     response = render(request, 'GUSpeedruns/homepage.html')
@@ -103,3 +105,23 @@ def register(request):
                   context = {'user_form': user_form,
                              'profile_form': profile_form,
                              'registered': registered})
+    
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        user = authenticate(username=username,password=password)
+        
+        if user:
+            if user.is_active:
+                login(request, user)
+                return redirect(reverse('GUSpeedruns:index'))
+            else:
+                return HttpResponse("Your GUSpeedrun account is disabled.")
+        else:
+            print(f"Invalid login details: {username}, {password}")
+            return HttpResponse("Invalid login details supplied.")
+    else:
+        return render(request, 'GUSpeedruns/login.html')
+            
