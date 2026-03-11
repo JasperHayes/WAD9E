@@ -1,0 +1,22 @@
+{% extends 'GUSpeedruns/base.html' %}
+
+{% block title_block %}
+    Upload comment
+{% endblock %}    
+{% block body_block %}
+    <h1>Upload comment</h1>
+    <div>
+        <form id="comment_form" method="post" action="/{{ game_name_slug }}/{{ run.id }}/comments/add_comment">
+            {% csrf_token %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+            {% for field in form.visible_fields %}
+                {{ field.errors }}
+                {{ field.help_text }}
+                {{ field }}
+            {% endfor %}
+            <input type="submit" name="submit" value="Add Comment" />
+        </form>
+    </div>
+{% endblock %}

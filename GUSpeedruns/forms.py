@@ -1,5 +1,6 @@
 from django import forms
 from GUSpeedruns.models import Game
+from GUSpeedruns.models import Comment
 
 class UploadGameForm(forms.ModelForm):
     name = forms.CharField(max_length=Game.NAME_MAX_LENGTH, help_text="Please enter the game name.")
@@ -16,3 +17,11 @@ class UploadGameForm(forms.ModelForm):
                 'type': 'date'
             })
         }
+        
+class CommentForm(forms.ModelForm):
+    title = forms.CharField(max_length=50, help_text="Please enter a title.")
+    content = forms.CharField(max_length=400, help_text="Please enter your comment.")
+    
+    class Meta: 
+        model = Comment
+        fields = ['title', 'content']
