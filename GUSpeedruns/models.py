@@ -57,14 +57,14 @@ class Run(models.Model):
 
 
 class Comment(models.Model):
-    TITLE_MAX_LENGTH = 20
+    TITLE_MAX_LENGTH = 50
     CONTENT_MAX_LENGTH = 400
 
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
-    title = models.CharField(max_length=TITLE_MAX_LENGTH, unique=True)
-    slug_title = models.SlugField(unique=True)
+    title = models.CharField(max_length=TITLE_MAX_LENGTH)
+    slug_title = models.SlugField()
     content = models.CharField(max_length=CONTENT_MAX_LENGTH)
 
     def save(self, *args, **kwargs):

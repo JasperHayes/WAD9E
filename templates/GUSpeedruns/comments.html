@@ -1,0 +1,30 @@
+{% extends 'GUSpeedruns/base.html' %}
+
+{% block title_block %}
+    {% if run %}
+            {{ run.name }} - Comments
+        {% else %}
+            Unknown Run
+        {% endif %}
+{% endblock %}
+
+{% block body_block %}
+    {% if run %}
+        <h1> Comments for {{ run.name }} </h1>
+        {% if comments %}
+            <ul>
+                {% for c in comments %}
+                    <li>
+                        <strong>{{c.title}}</strong>
+                        {{c.user}} <br />
+                        <p>{{c.content}}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <strong> No comments. </strong>
+        {% endif %}
+    {% else %}
+        This run doesn't exist
+    {% endif %}
+{% endblock %}
