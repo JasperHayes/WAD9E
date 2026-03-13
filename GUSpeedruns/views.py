@@ -124,4 +124,22 @@ def user_login(request):
             return HttpResponse("Invalid login details supplied.")
     else:
         return render(request, 'GUSpeedruns/login.html')
+
+
+
+def show_run(request, game_name_slug, run_name_slug):
+    context_dict = {}
+
+    try:
+        run = Run.objects.get(slug_title = run_name_slug)
+        context_dict['run'] = run
+        assert run.game.slug_name == game_name_slug
+        comments = Comment.objects.filter(run = run)
+        context_dict['comments'] = comments
+    
+    except:
+        context_dict['run'] = None
+        context_dict['comments'] = None
+
+    return render(request, 'GUSpeedruns/run.html', context=context_dict)
             
