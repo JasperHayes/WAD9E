@@ -35,7 +35,7 @@ class Game(models.Model):
 
 class Run(models.Model):
     TITLE_MAX_LENGTH = 100
-    URL_MAX_LENGTH = 200
+    URL_ID_LENGTH = 100
     DESCRIPTION_MAX_LENGTH = 200
 
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
@@ -44,7 +44,7 @@ class Run(models.Model):
     title = models.CharField(max_length=TITLE_MAX_LENGTH, unique=True)
     slug_title = models.SlugField(unique=True)
     time = models.TimeField()
-    video_url = models.URLField(max_length=URL_MAX_LENGTH)
+    video_url_id = models.CharField(max_length=URL_ID_LENGTH)
     description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
 
     def save(self, *args, **kwargs):

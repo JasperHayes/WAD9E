@@ -24,10 +24,10 @@ def populate():
     ]
 
     runs = [
-        {'game': 0 ,'user': 0, 'time': datetime.time(0,6,50,359000), 'video': "https://youtu.be/rVs0EdiVefM",'description': "seed: -8717682453392808086"},
-        {'game': 0 ,'user': 1, 'time': datetime.time(0,7,1,494000), 'video': "https://youtu.be/E3t24Urba6Y",'description': "seed: 8802654848425114236"},
-        {'game': 1 ,'user': 0, 'time': datetime.time(0,30,49), 'video': "https://youtu.be/AyqJ8xkqBMo",'description': "bad"},
-        {'game': 1 ,'user': 1, 'time': datetime.time(0,30,53), 'video': "https://youtu.be/nQdJunydzZ8",'description': "a new era"},
+        {'game': 0 ,'user': 0, 'time': datetime.time(0,6,50,359000), 'video': "rVs0EdiVefM",'description': "seed: -8717682453392808086"},
+        {'game': 0 ,'user': 1, 'time': datetime.time(0,7,1,494000), 'video': "E3t24Urba6Y",'description': "seed: 8802654848425114236"},
+        {'game': 1 ,'user': 0, 'time': datetime.time(0,30,49), 'video': "AyqJ8xkqBMo",'description': "bad"},
+        {'game': 1 ,'user': 1, 'time': datetime.time(0,30,53), 'video': "nQdJunydzZ8",'description': "a new era"},
     ]
 
     comments = [
@@ -84,13 +84,13 @@ def add_run(game, user, time, video, description):
         user = user,
         defaults={
             "time": time,
-            "video_url": video,
+            "video_url_id": video,
             "description": description
         })
     
     if not created:
         r.time = time
-        r.video_url = video
+        r.video_url_id = video
         r.description = description
         r.save()
     return r

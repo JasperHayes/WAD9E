@@ -1,0 +1,33 @@
+{% extends 'GUSpeedruns/base.html' %}
+
+{% block title_block %}
+    Run
+{% endblock %}
+
+{% block body_block %}
+    <div>
+    {% if run %}
+        <div>
+            <h1>{{ run.title }} on {{ run.game.name }} </h1>
+            <iframe src="https://www.youtube.com/embed/{{ run.video_url_id }}" allowfullscreen></iframe>
+            <br/>
+            Description: <br/>
+            {{ run.description }}
+        </div>
+        <hr />
+        <div>
+            {% if comments %}
+                <ul>
+                    {% for comment in comments %}
+                        <li>{{ comment.user }}: {{ comment.title }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+            <strong>No comments yet.</strong>
+            {% endif %}
+        </div>
+    {% else %}
+        <strong>The specified run does not exist.</strong>
+    {% endif %}
+    </div>
+{% endblock %}
