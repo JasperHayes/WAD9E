@@ -12,4 +12,5 @@ urlpatterns = [
     path('<slug:game_name_slug>/<int:run_id>/comments/add_comment', views.add_comment, name = "add_comment"),
     path('register/', views.register, name='register'),
     path('login/', views.user_login, name='login'),
+    path('game/<slug:game_name_slug>/', views.show_game, name='show_game'),
 ]

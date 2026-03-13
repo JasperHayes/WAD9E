@@ -1,0 +1,34 @@
+{% extends 'GUSpeedruns/base.html' %}
+
+{% block title_block %}
+    {{ game.name }}
+{% endblock %}
+
+{% block body_block %}
+<h1>{{ game.name }}</h1>
+<p>Released on: {{ game.date_released }}</p>
+
+<div>
+    {% if game.image %}
+        <img src="{{ game.image.url }}" alt="{{ game.name }} image" style="max-width: 300px; height: auto;">
+    {% else %}
+        <p>No image available for this game.</p>
+    {% endif %}
+</div>
+
+<div>
+    <h2>Top Runs</h2>
+
+    {% if runs %}
+        <ol>
+            {% for run in runs|slice:":10" %}
+                <li>
+                    {{ run.runner.username }} - {{ run.time }}
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>No runs available for this game.</p>
+    {% endif %}
+</div>
+{% endblock %}

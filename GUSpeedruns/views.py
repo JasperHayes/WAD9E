@@ -142,4 +142,20 @@ def show_run(request, game_name_slug, run_name_slug):
         context_dict['comments'] = None
 
     return render(request, 'GUSpeedruns/run.html', context=context_dict)
+
+
+def show_game(request, game_name_slug):
+    context_dict = {}
+
+    try:
+        game = Game.objects.get(slug_name = game_name_slug)
+        context_dict['game'] = game
+        runs = Run.objects.filter(game = game)
+        context_dict['runs'] = runs
+    
+    except:
+        context_dict['game'] = None
+        context_dict['runs'] = None
+        
+    return render(request, 'GUSpeedruns/game.html', context=context_dict)
             
