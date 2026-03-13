@@ -3,9 +3,9 @@ from django.contrib.auth.models import User
 from GUSpeedruns.models import Game, Comment, UserProfile
 
 class UploadGameForm(forms.ModelForm):
-    name = forms.CharField(max_length=Game.NAME_MAX_LENGTH, help_text="Please enter the game name.")
-    image = forms.ImageField(required=False, help_text="Upload image (optional).")
-    date_released = forms.DateField( help_text="Please enter the game's release date.", widget=forms.DateInput(attrs={'type': 'date'}))
+    name = forms.CharField(max_length=Game.NAME_MAX_LENGTH, help_text="Please enter the game name:")
+    image = forms.ImageField(required=False, help_text="Upload image (optional):")
+    date_released = forms.DateField( help_text="Please enter the game's release date:", widget=forms.DateInput(attrs={'type': 'date'}))
 
     class Meta:
         model = Game

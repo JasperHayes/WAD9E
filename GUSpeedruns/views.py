@@ -27,7 +27,7 @@ def upload_game(request):
 
         if form.is_valid():
             form.save(commit=True)
-            return redirect('GUSpeedruns:homepage')
+            return redirect('/GUSpeedruns/')
         else:
             print(form.errors)
 
