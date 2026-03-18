@@ -6,11 +6,12 @@ app_name = 'GUSpeedruns'
 urlpatterns = [
     path('', views.homepage, name = "homepage"),
     path('about/', views.about, name = "about"),
-    path('game/upload/', views.upload_game, name='upload_game'),
-    path('game/<slug:game_name_slug>/<slug:run_name_slug>/', views.show_run, name='show_run'),
-    path('<slug:game_name_slug>/<int:run_id>/comments/', views.comments, name = "comments"),
-    path('<slug:game_name_slug>/<int:run_id>/comments/add_comment', views.add_comment, name = "add_comment"),
     path('register/', views.register, name='register'),
     path('login/', views.user_login, name='login'),
+    path('game/upload/', views.upload_game, name='upload_game'),
     path('game/<slug:game_name_slug>/', views.show_game, name='show_game'),
+    path('game/<slug:game_name_slug>/add-run/', views.add_run, name='add_run'),
+    path('game/<slug:game_name_slug>/<slug:run_name_slug>/', views.show_run, name='show_run'),
+    path('<slug:game_name_slug>/<int:run_id>/comments/add-comment', views.add_comment, name = "add_comment"),
+    path('<slug:game_name_slug>/<int:run_id>/comments/', views.comments, name = "comments"),
 ]

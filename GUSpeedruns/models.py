@@ -43,7 +43,7 @@ class Run(models.Model):
 
     title = models.CharField(max_length=TITLE_MAX_LENGTH, unique=True)
     slug_title = models.SlugField(unique=True)
-    time = models.TimeField()
+    time = models.DurationField()
     video_url_id = models.CharField(max_length=URL_ID_LENGTH)
     description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
 

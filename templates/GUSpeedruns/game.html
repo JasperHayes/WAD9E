@@ -23,7 +23,7 @@
         <ol>
             {% for run in runs|slice:":10" %}
                 <li>
-                    {{ run.runner.username }} - {{ run.time }}
+                    {{ run.user }} - {{ run.time }}
                 </li>
             {% endfor %}
         </ol>

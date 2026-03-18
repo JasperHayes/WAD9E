@@ -24,10 +24,10 @@ def populate():
     ]
 
     runs = [
-        {'game': 0 ,'user': 0, 'time': datetime.time(0,6,50,359000), 'video': "rVs0EdiVefM",'description': "seed: -8717682453392808086"},
-        {'game': 0 ,'user': 1, 'time': datetime.time(0,7,1,494000), 'video': "E3t24Urba6Y",'description': "seed: 8802654848425114236"},
-        {'game': 1 ,'user': 0, 'time': datetime.time(0,30,49), 'video': "AyqJ8xkqBMo",'description': "bad"},
-        {'game': 1 ,'user': 1, 'time': datetime.time(0,30,53), 'video': "nQdJunydzZ8",'description': "a new era"},
+        {'game': 0 ,'user': 0, 'time': datetime.timedelta(hours=0,minutes=6,seconds=50,milliseconds=359), 'video': "rVs0EdiVefM",'description': "seed: -8717682453392808086"},
+        {'game': 0 ,'user': 1, 'time': datetime.timedelta(hours=0,minutes=7,seconds=1,milliseconds=494), 'video': "E3t24Urba6Y",'description': "seed: 8802654848425114236"},
+        {'game': 1 ,'user': 0, 'time': datetime.timedelta(hours=0,minutes=30,seconds=49,milliseconds=0), 'video': "AyqJ8xkqBMo",'description': "bad"},
+        {'game': 1 ,'user': 1, 'time': datetime.timedelta(hours=0,minutes=30,seconds=53,milliseconds=0), 'video': "nQdJunydzZ8",'description': "a new era"},
     ]
 
     comments = [

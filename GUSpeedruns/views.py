@@ -1,14 +1,12 @@
 from django.shortcuts import render, redirect
-from GUSpeedruns.forms import UserForm, UserProfileForm
-from GUSpeedruns.forms import UploadGameForm
-from GUSpeedruns.forms import CommentForm
-from GUSpeedruns.models import Game
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.urls import reverse
-from GUSpeedruns.models import Run
-from GUSpeedruns.models import Comment
+from GUSpeedruns.models import Game, Run, Comment, UserProfile
+from GUSpeedruns.forms import UserForm, UserProfileForm, UploadGameForm, CommentForm, RunForm
+from datetime import timedelta
+from urllib.parse import urlparse, parse_qs
 
 def homepage(request):
     response = render(request, 'GUSpeedruns/homepage.html')
@@ -18,65 +16,6 @@ def about(request):
     response = render(request, 'GUSpeedruns/about.html')
     return(response)
 
-@login_required
-def upload_game(request):
-    form = UploadGameForm()
-
-    if request.method == 'POST':
-        form = UploadGameForm(request.POST, request.FILES)
-
-        if form.is_valid():
-            form.save(commit=True)
-            return redirect('/GUSpeedruns/')
-        else:
-            print(form.errors)
-
-    return render(request, 'GUSpeedruns/upload_game.html', {'form': form})
-
-def comments(request, game_name_slug, run_id):
-    context_dict = {}
-    try:
-        run = Run.objects.get(id = run_id)
-        comments = Comment.objects.filter(run=run)
-        
-        context_dict['run'] = run
-        context_dict['comments'] = comments
-        context_dict['game_name_slug'] = game_name_slug # needed for the URL tag for add comment
-    
-    except Run.DoesNotExist:
-        context_dict['run'] = None
-        context_dict['comments'] = None
-        
-    return render(request, 'GUSpeedruns/comments.html', context=context_dict)
-
-@login_required
-def add_comment(request, game_name_slug, run_id):
-    try:
-        run = Run.objects.get(id=run_id)
-    except Run.DoesNotExist:
-        return redirect('/')
-    
-    form = CommentForm()
-    
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        
-        if form.is_valid():
-            if run:
-                comment = form.save(commit=False)
-                comment.run = run
-                comment.user = request.user
-                comment.save()
-                    
-                return redirect(reverse('GUSpeedruns:comments',
-                        kwargs={'game_name_slug': game_name_slug,
-                                'run_id': run_id}))
-        
-        else:
-            print(form.errors)
-    
-    context_dict = {'form': form, 'run': run}
-    return render(request, 'GUSpeedruns/add_comment.html', context=context_dict)
 
 def register(request):
     registered = False
@@ -116,7 +55,7 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return redirect(reverse('GUSpeedruns:index'))
+                return redirect(reverse('GUSpeedruns:homepage'))
             else:
                 return HttpResponse("Your GUSpeedrun account is disabled.")
         else:
@@ -125,6 +64,81 @@ def user_login(request):
     else:
         return render(request, 'GUSpeedruns/login.html')
 
+
+@login_required
+def upload_game(request):
+    form = UploadGameForm()
+
+    if request.method == 'POST':
+        form = UploadGameForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save(commit=True)
+            return redirect('/GUSpeedruns/')
+        else:
+            print(form.errors)
+
+    return render(request, 'GUSpeedruns/upload_game.html', {'form': form})
+
+def show_game(request, game_name_slug):
+    context_dict = {}
+
+    try:
+        game = Game.objects.get(slug_name = game_name_slug)
+        context_dict['game'] = game
+        runs = Run.objects.filter(game = game)
+        context_dict['runs'] = runs
+    
+    except:
+        context_dict['game'] = None
+        context_dict['runs'] = None
+        
+    return render(request, 'GUSpeedruns/game.html', context=context_dict)
+
+
+def comments(request, game_name_slug, run_id):
+    context_dict = {}
+    try:
+        run = Run.objects.get(id = run_id)
+        comments = Comment.objects.filter(run=run)
+        
+        context_dict['run'] = run
+        context_dict['comments'] = comments
+        context_dict['game_name_slug'] = game_name_slug # needed for the URL tag for add comment
+    
+    except Run.DoesNotExist:
+        context_dict['run'] = None
+        context_dict['comments'] = None
+        
+    return render(request, 'GUSpeedruns/comments.html', context=context_dict)
+
+@login_required
+def add_comment(request, game_name_slug, run_id):
+    try:
+        run = Run.objects.get(id=run_id)
+    except Run.DoesNotExist:
+        return redirect(reverse('GUSpeedruns:homepage'))
+    
+    form = CommentForm()
+    
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        
+        if form.is_valid():
+            if run:
+                comment = form.save(commit=False)
+                comment.run = run
+                comment.user = request.user
+                comment.save()
+                    
+                return redirect(reverse('GUSpeedruns:comments',
+                        kwargs={'game_name_slug': game_name_slug,'run_id': run_id}))
+        
+        else:
+            print(form.errors)
+    
+    context_dict = {'form': form, 'run': run, 'game_name_slug':game_name_slug}
+    return render(request, 'GUSpeedruns/add_comment.html', context=context_dict)
 
 
 def show_run(request, game_name_slug, run_name_slug):
@@ -143,19 +157,41 @@ def show_run(request, game_name_slug, run_name_slug):
 
     return render(request, 'GUSpeedruns/run.html', context=context_dict)
 
+def add_run(request, game_name_slug):
+    form = RunForm()
 
-def show_game(request, game_name_slug):
-    context_dict = {}
+    if request.method == 'POST':
+        form = RunForm(request.POST)
 
-    try:
-        game = Game.objects.get(slug_name = game_name_slug)
-        context_dict['game'] = game
-        runs = Run.objects.filter(game = game)
-        context_dict['runs'] = runs
-    
-    except:
-        context_dict['game'] = None
-        context_dict['runs'] = None
+        if form.is_valid():
+            run = form.save(commit=False)
+
+            hours = form.cleaned_data['hours']
+            minutes = form.cleaned_data['minutes']
+            seconds = form.cleaned_data['seconds']
+            milliseconds = form.cleaned_data['milliseconds']
+
+            run.user = request.user
+            run.game = Game.objects.get(game_name_slug=game_name_slug)
+            run.video_url_id = get_youtube_id(form.cleaned_data['video'])
+            run.time = timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
+
+            run.save()
+            return redirect(reverse('GUSpeedruns:show_game', kwargs={'game_name_slug': game_name_slug}))
         
-    return render(request, 'GUSpeedruns/game.html', context=context_dict)
+        else:
+            print(form.errors)
+
+    return render(request, 'GUSpeedruns/add_run.html', {'form': form, 'game_name_slug': game_name_slug})
+
+def get_youtube_id(url):
+    parsed_url = urlparse(url)
+
+    if parsed_url.hostname in ['www.youtube.com', 'youtube.com']:
+        return parse_qs(parsed_url.query).get('v', [None])[0]
+
+    elif parsed_url.hostname == 'youtu.be':
+        return parsed_url.path.lstrip('/')
+
+    return None
             
