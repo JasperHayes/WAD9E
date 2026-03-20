@@ -128,7 +128,7 @@ def add_comment(request, game_name_slug, run_id):
             if run:
                 comment = form.save(commit=False)
                 comment.run = run
-                comment.user = request.user
+                comment.user = UserProfile.objects.get(user = request.user)
                 comment.save()
                     
                 return redirect(reverse('GUSpeedruns:comments',
@@ -171,7 +171,7 @@ def add_run(request, game_name_slug):
             seconds = form.cleaned_data['seconds']
             milliseconds = form.cleaned_data['milliseconds']
 
-            run.user = request.user
+            run.user = comment.user = UserProfile.objects.get(user = request.user)
             run.game = Game.objects.get(game_name_slug=game_name_slug)
             run.video_url_id = get_youtube_id(form.cleaned_data['video'])
             run.time = timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
