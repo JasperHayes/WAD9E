@@ -7,10 +7,21 @@ from GUSpeedruns.models import Game, Run, Comment, UserProfile
 from GUSpeedruns.forms import UserForm, UserProfileForm, UploadGameForm, CommentForm, RunForm
 from datetime import timedelta
 from urllib.parse import urlparse, parse_qs
+from django.core.paginator import Paginator
 
 def homepage(request):
-    response = render(request, 'GUSpeedruns/homepage.html')
-    return(response)
+    game_list = Game.objects.order_by('-views', 'name')
+
+    paginator = Paginator(game_list, 9)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context_dict = {
+        'page_obj': page_obj,
+        'games': page_obj.object_list,
+    }
+
+    return render(request, 'GUSpeedruns/homepage.html', context=context_dict)
 
 def about(request):
     response = render(request, 'GUSpeedruns/about.html')
