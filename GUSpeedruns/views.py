@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.urls import reverse
 from GUSpeedruns.models import Game, Run, Comment, UserProfile
@@ -84,6 +84,10 @@ def user_login(request):
     else:
         return render(request, 'GUSpeedruns/login.html')
 
+@login_required
+def user_logout(request):
+    logout(request)
+    return(redirect(reverse('GUSpeedruns:homepage')))
 
 @login_required
 def upload_game(request):
@@ -114,23 +118,6 @@ def show_game(request, game_name_slug):
         context_dict['runs'] = None
         
     return render(request, 'GUSpeedruns/game.html', context=context_dict)
-
-
-def comments(request, game_name_slug, run_id):
-    context_dict = {}
-    try:
-        run = Run.objects.get(id = run_id)
-        comments = Comment.objects.filter(run=run)
-        
-        context_dict['run'] = run
-        context_dict['comments'] = comments
-        context_dict['game_name_slug'] = game_name_slug # needed for the URL tag for add comment
-    
-    except Run.DoesNotExist:
-        context_dict['run'] = None
-        context_dict['comments'] = None
-        
-    return render(request, 'GUSpeedruns/comments.html', context=context_dict)
 
 def comment_detail(request, game_name_slug, run_name_slug, slug_title):
     context_dict = {}

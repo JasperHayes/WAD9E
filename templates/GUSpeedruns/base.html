@@ -13,10 +13,18 @@
     <body>
         <div>
             <!-- Top bar with home, search etc. -->
-             <a href="{% url 'GUSpeedruns:homepage' %}">Home</a>
-             Search:
-             <a href="{% url 'GUSpeedruns:register' %}">Sign Up</a>
-             <a href="{% url 'GUSpeedruns:login' %}">Login</a>
+            <span style="float: right;">
+                {% if user.is_authenticated %}
+                Logged in as: <strong>{{ user.username }}</strong>
+                <a href="{% url 'GUSpeedruns:logout' %}">Logout</a>
+                {% else %}
+                    Not logged in
+                {% endif %}
+            </span>
+            <a href="{% url 'GUSpeedruns:homepage' %}">Home</a>
+            Search:
+            <a href="{% url 'GUSpeedruns:register' %}">Sign Up</a>
+            <a href="{% url 'GUSpeedruns:login' %}">Login</a>
         </div>
         <hr />
         <div>
