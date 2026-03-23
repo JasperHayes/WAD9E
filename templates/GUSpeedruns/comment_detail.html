@@ -1,0 +1,15 @@
+{% extends 'GUSpeedruns/base.html' %}
+
+{% block title_block %}
+    {{ comment.title }}
+{% endblock %}
+
+{% block body_block %}
+    {% if comment %}
+        <h1> {{ comment.title }}</h1> <small>by {{ comment.user }}</small>
+        <p>{{ comment.content }} </p>
+        <a href="{% url 'GUSpeedruns:show_run' game_name_slug=game_name_slug run_name_slug=comment.run.slug_title %}">Back to Run</a> <br />
+    {% else %}
+        This comment does not exist.
+    {% endif %}
+{% endblock %}

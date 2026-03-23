@@ -12,6 +12,6 @@ urlpatterns = [
     path('game/<slug:game_name_slug>/', views.show_game, name='show_game'),
     path('game/<slug:game_name_slug>/add-run/', views.add_run, name='add_run'),
     path('game/<slug:game_name_slug>/<slug:run_name_slug>/', views.show_run, name='show_run'),
-    path('<slug:game_name_slug>/<int:run_id>/comments/add-comment', views.add_comment, name = "add_comment"),
-    path('<slug:game_name_slug>/<int:run_id>/comments/', views.comments, name = "comments"),
+    path('game/<slug:game_name_slug>/<slug:run_name_slug>/add-comment', views.add_comment, name = "add_comment"),
+    path('game/<slug:game_name_slug>/<slug:run_name_slug>/<slug:slug_title>/', views.comment_detail, name='comment_detail'),
 ]

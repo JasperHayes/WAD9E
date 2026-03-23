@@ -6,7 +6,7 @@
 {% block body_block %}
     <h1>Upload comment</h1>
     <div>
-        <form id="comment_form" method="post" action="{% url 'GUSpeedruns:add_comment' game_name_slug run.id %}">
+        <form id="comment_form" method="post" action="{% url 'GUSpeedruns:add_comment' game_name_slug run.slug_title %}">
             {% csrf_token %}
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}

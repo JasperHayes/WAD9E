@@ -132,10 +132,24 @@ def comments(request, game_name_slug, run_id):
         
     return render(request, 'GUSpeedruns/comments.html', context=context_dict)
 
-@login_required
-def add_comment(request, game_name_slug, run_id):
+def comment_detail(request, game_name_slug, run_name_slug, slug_title):
+    context_dict = {}
     try:
-        run = Run.objects.get(id=run_id)
+        comment = Comment.objects.get(slug_title=slug_title)
+        
+        context_dict['comment'] = comment
+        context_dict['game_name_slug'] = game_name_slug
+        context_dict['run_name_slug'] = run_name_slug
+    
+    except Comment.DoesNotExist:
+        context_dict['comment'] = None
+    
+    return render(request, 'GUSpeedruns/comment_detail.html', context=context_dict)
+
+@login_required
+def add_comment(request, game_name_slug, run_name_slug):
+    try:
+        run = Run.objects.get(slug_title=run_name_slug)
     except Run.DoesNotExist:
         return redirect(reverse('GUSpeedruns:homepage'))
     
@@ -151,8 +165,8 @@ def add_comment(request, game_name_slug, run_id):
                 comment.user = UserProfile.objects.get(user = request.user)
                 comment.save()
                     
-                return redirect(reverse('GUSpeedruns:comments',
-                        kwargs={'game_name_slug': game_name_slug,'run_id': run_id}))
+                return redirect(reverse('GUSpeedruns:show_run',
+                        kwargs={'game_name_slug': game_name_slug,'run_name_slug': run_name_slug}))
         
         else:
             print(form.errors)
@@ -170,6 +184,8 @@ def show_run(request, game_name_slug, run_name_slug):
         assert run.game.slug_name == game_name_slug
         comments = Comment.objects.filter(run = run)
         context_dict['comments'] = comments
+        context_dict['game_name_slug'] = game_name_slug
+        context_dict['run_name_slug'] = run_name_slug
     
     except:
         context_dict['run'] = None
