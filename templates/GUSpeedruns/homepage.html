@@ -11,6 +11,27 @@
         margin: 0 auto;
     }
 
+    .search-bar-wrapper {
+        margin-bottom: 24px;
+        text-align: center;
+    }
+
+    .search-bar-wrapper form {
+        display: inline-block;
+    }
+
+    .search-input {
+        width: 320px;
+        padding: 8px 12px;
+        font-size: 16px;
+    }
+
+    .search-button {
+        padding: 8px 14px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
     .homepage-title {
         margin-bottom: 20px;
     }
@@ -71,11 +92,33 @@
         display: inline-block;
         margin: 0 6px;
     }
+
+    .no-results {
+        text-align: center;
+        margin-top: 20px;
+    }
 </style>
 
 <div class="homepage-wrapper">
+
+    <div class="search-bar-wrapper">
+        <form method="get" action="{% url 'GUSpeedruns:homepage' %}">
+            <input
+                type="text"
+                name="q"
+                value="{{ query }}"
+                placeholder="Search game name"
+                class="search-input">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </div>
+
     <div class="homepage-title">
-        <h2>Trending Games</h2>
+        {% if query %}
+            <h2>{{ page_title }} for "{{ query }}"</h2>
+        {% else %}
+            <h2>{{ page_title }}</h2>
+        {% endif %}
     </div>
 
     {% if games %}
@@ -101,19 +144,25 @@
 
         <div class="pagination">
             {% if page_obj.has_previous %}
-                <a href="?page=1">First</a>
-                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                <a href="?{% if query %}q={{ query|urlencode }}&{% endif %}page=1">First</a>
+                <a href="?{% if query %}q={{ query|urlencode }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
             {% endif %}
 
             <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
 
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                <a href="?{% if query %}q={{ query|urlencode }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
+                <a href="?{% if query %}q={{ query|urlencode }}&{% endif %}page={{ page_obj.paginator.num_pages }}">Last</a>
             {% endif %}
         </div>
     {% else %}
-        <p>No games available.</p>
+        <div class="no-results">
+            {% if query %}
+                <p>No games matched "{{ query }}".</p>
+            {% else %}
+                <p>No games available.</p>
+            {% endif %}
+        </div>
     {% endif %}
 </div>
 {% endblock %}

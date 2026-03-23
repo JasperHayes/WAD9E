@@ -10,15 +10,24 @@ from urllib.parse import urlparse, parse_qs
 from django.core.paginator import Paginator
 
 def homepage(request):
-    game_list = Game.objects.order_by('-views', 'name')
+    query = request.GET.get('q', '').strip()
+
+    if query:
+        game_list = Game.objects.filter(name__icontains=query).order_by('name')
+        page_title = 'Search Results'
+    else:
+        game_list = Game.objects.order_by('-views', 'name')
+        page_title = 'Trending Games'
 
     paginator = Paginator(game_list, 9)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     context_dict = {
-        'page_obj': page_obj,
         'games': page_obj.object_list,
+        'page_obj': page_obj,
+        'query': query,
+        'page_title': page_title,
     }
 
     return render(request, 'GUSpeedruns/homepage.html', context=context_dict)
