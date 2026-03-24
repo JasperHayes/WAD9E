@@ -90,7 +90,7 @@ def user_logout(request):
     logout(request)
     return(redirect(reverse('GUSpeedruns:homepage')))
 
-@login_required
+@staff_member_required
 def upload_game(request):
     form = UploadGameForm()
 
@@ -259,6 +259,3 @@ def delete_comment(request, game_name_slug, run_name_slug, slug_title):
         'game_name_slug': game_name_slug,
         'run_name_slug': run_name_slug
     }))
-        
-    
-    
