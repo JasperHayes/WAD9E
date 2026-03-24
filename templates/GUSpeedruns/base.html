@@ -15,8 +15,11 @@
             <!-- Top bar with home, search etc. -->
             <span style="float: right;">
                 {% if user.is_authenticated %}
-                Logged in as: <strong>{{ user.username }}</strong>
-                <a href="{% url 'GUSpeedruns:logout' %}">Logout</a>
+                    Logged in as: <strong>{{ user.username }}</strong> 
+                    {% if user.is_staff %}
+                        (moderator)
+                    {% endif %}
+                    <a href="{% url 'GUSpeedruns:logout' %}">Logout</a>
                 {% else %}
                     Not logged in
                 {% endif %}

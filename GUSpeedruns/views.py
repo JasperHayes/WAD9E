@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.urls import reverse
@@ -135,6 +136,7 @@ def comment_detail(request, game_name_slug, run_name_slug, slug_title):
 
 @login_required
 def add_comment(request, game_name_slug, run_name_slug):
+    context_dict = {}
     try:
         run = Run.objects.get(slug_title=run_name_slug)
     except Run.DoesNotExist:
@@ -151,9 +153,13 @@ def add_comment(request, game_name_slug, run_name_slug):
                 comment.run = run
                 comment.user = UserProfile.objects.get(user = request.user)
                 comment.save()
+                context_dict['game_name_slug'] = game_name_slug
+                context_dict['run_name_slug'] = run_name_slug
                     
-                return redirect(reverse('GUSpeedruns:show_run',
-                        kwargs={'game_name_slug': game_name_slug,'run_name_slug': run_name_slug}))
+                return redirect(reverse('GUSpeedruns:show_run', kwargs={
+                    'game_name_slug': game_name_slug,
+                    'run_name_slug': run_name_slug
+                    }))
         
         else:
             print(form.errors)
@@ -218,3 +224,37 @@ def get_youtube_id(url):
 
     return None
             
+@staff_member_required
+def delete_run(request, game_name_slug, run_name_slug):
+    if request.method == 'POST':
+        try:
+            run = Run.objects.get(slug_title = run_name_slug)
+            run.delete()
+            
+        except Run.DoesNotExist:
+            return redirect(reverse('GUSpeedruns:homepage'))
+        
+    return redirect(reverse('GUSpeedruns:show_game', kwargs={'game_name_slug': game_name_slug}))
+
+@staff_member_required
+def delete_comment(request, game_name_slug, run_name_slug, slug_title):
+    if request.method == 'POST':
+        context_dict = {}
+        try:
+            comment = Comment.objects.get(slug_title=slug_title)
+            context_dict['comment'] = comment
+            context_dict['game_name_slug'] = game_name_slug
+            context_dict['run_name_slug'] = run_name_slug
+            comment.delete()
+        
+        except Comment.DoesNotExist:
+            context_dict['comment'] = None
+            
+
+    return redirect(reverse('GUSpeedruns:show_run', kwargs={
+        'game_name_slug': game_name_slug,
+        'run_name_slug': run_name_slug
+    }))
+        
+    
+    

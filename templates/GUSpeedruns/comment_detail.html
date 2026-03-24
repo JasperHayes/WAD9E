@@ -9,6 +9,12 @@
         <h1> {{ comment.title }}</h1> <small>by {{ comment.user }}</small>
         <p>{{ comment.content }} </p>
         <a href="{% url 'GUSpeedruns:show_run' game_name_slug=game_name_slug run_name_slug=comment.run.slug_title %}">Back to Run</a> <br />
+        {% if user.is_staff %}
+                <form method="post" action="{% url 'GUSpeedruns:delete_comment' game_name_slug=game_name_slug run_name_slug=comment.run.slug_title slug_title=comment.slug_title%}">Delete Comment</a> 
+                    {% csrf_token %}
+                    <button type="submit">Delete Comment</button>
+                </form>   
+        {% endif %}
     {% else %}
         This comment does not exist.
     {% endif %}
