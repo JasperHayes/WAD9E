@@ -111,6 +111,7 @@ def show_game(request, game_name_slug):
     try:
         game = Game.objects.get(slug_name = game_name_slug)
         context_dict['game'] = game
+        context_dict['game_name_slug'] = game_name_slug
         runs = Run.objects.filter(game = game)
         context_dict['runs'] = runs
     
@@ -173,12 +174,15 @@ def show_run(request, game_name_slug, run_name_slug):
 
     try:
         run = Run.objects.get(slug_title = run_name_slug)
+        game = Game.objects.get(slug_name = game_name_slug)
         context_dict['run'] = run
+        context_dict['game'] = game
         assert run.game.slug_name == game_name_slug
         comments = Comment.objects.filter(run = run)
         context_dict['comments'] = comments
         context_dict['game_name_slug'] = game_name_slug
         context_dict['run_name_slug'] = run_name_slug
+        
     
     except:
         context_dict['run'] = None

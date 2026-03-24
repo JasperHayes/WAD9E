@@ -23,7 +23,9 @@
         <ol>
             {% for run in runs|slice:":10" %}
                 <li>
+                    <a href="{% url 'GUSpeedruns:show_run' game_name_slug=game_name_slug run_name_slug=run.slug_title %}">
                     {{ run.user }} - {{ run.time }}
+                    </a>
                 </li>
             {% endfor %}
         </ol>
