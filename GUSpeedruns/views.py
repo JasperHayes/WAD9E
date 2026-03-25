@@ -204,8 +204,8 @@ def add_run(request, game_name_slug):
             seconds = form.cleaned_data['seconds']
             milliseconds = form.cleaned_data['milliseconds']
 
-            run.user = comment.user = UserProfile.objects.get(user = request.user)
-            run.game = Game.objects.get(game_name_slug=game_name_slug)
+            run.user = UserProfile.objects.get(user = request.user)
+            run.game = Game.objects.get(slug_name=game_name_slug)
             run.video_url_id = get_youtube_id(form.cleaned_data['video'])
             run.time = timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
 

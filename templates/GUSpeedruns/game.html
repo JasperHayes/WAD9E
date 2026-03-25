@@ -33,4 +33,9 @@
         <p>No runs available for this game.</p>
     {% endif %}
 </div>
+
+<div>
+    {% if user.is_authenticated %}
+        <a href="{% url 'GUSpeedruns:add_run' game_name_slug=game_name_slug %}">Add Run</a> <br />
+    {% endif %}
 {% endblock %}

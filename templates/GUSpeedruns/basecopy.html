@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html>
+    <head lang="en">
+        <meta charset="UTF-8" />
+        <title>
+            GUSpeedruns-
+            {% block title_block %}
+                Unknown
+            {% endblock %}
+        </title>
+    </head>
+    <body>
+        <div>
+            <!-- Top bar with home, search etc. -->
+            <span style="float: right;">
+                {% if user.is_authenticated %}
+                    Logged in as: <strong>{{ user.username }}</strong> 
+                    {% if user.is_staff %}
+                        (moderator)
+                    {% endif %}
+                    <a href="{% url 'GUSpeedruns:logout' %}">Logout</a>
+                {% else %}
+                    Not logged in
+                {% endif %}
+            </span>
+            <a href="{% url 'GUSpeedruns:homepage' %}">Home</a>
+            Search:
+            <a href="{% url 'GUSpeedruns:register' %}">Sign Up</a>
+            <a href="{% url 'GUSpeedruns:login' %}">Login</a>
+        </div>
+        <hr />
+        <div>
+            <!-- main content -->
+            {% block body_block %}
+            {% endblock %}
+        </div>
+        <hr />
+        <div>
+            <!-- Bottom bar with about -->
+             <a href="{% url 'GUSpeedruns:about' %}">About Us</a>
+        </div>
+    </body>
+</html>
