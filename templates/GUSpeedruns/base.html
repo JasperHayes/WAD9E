@@ -3,32 +3,78 @@
 <html>
     <head lang="en">
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>
             GUSpeedruns-
             {% block title_block %}
                 Unknown
             {% endblock %}
         </title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="styles.css">
     </head>
     <body>
-        <div>
-            <!-- Top bar with home, search etc. -->
-            <span style="float: right;">
-                {% if user.is_authenticated %}
-                    Logged in as: <strong>{{ user.username }}</strong> 
-                    {% if user.is_staff %}
-                        (moderator)
-                    {% endif %}
-                    <a href="{% url 'GUSpeedruns:logout' %}">Logout</a>
-                {% else %}
-                    Not logged in
-                {% endif %}
-            </span>
-            <a href="{% url 'GUSpeedruns:homepage' %}">Home</a>
-            Search:
-            <a href="{% url 'GUSpeedruns:register' %}">Sign Up</a>
-            <a href="{% url 'GUSpeedruns:login' %}">Login</a>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand" href="#">GU Speedruns</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggle-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'GUSpeedruns:homepage' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'GUSpeedruns:about' %}">About</a>
+                    </li>
+            
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggler" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Top Games</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">Game1</a></li>
+                            <li><a class="dropdown-item" href="#">Game2</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                
+
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <form method="get" action="{% url 'GUSpeedruns:homepage' %}" class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search game name" aria-label="Search" name="q" value="{{ query }}">
+                        <button class="btn btn-light" type="submit">Search</button>
+                    </form>
+
+                    <div>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {% if user.is_authenticated %}
+                                    {{ user.username }}
+                                    {% if user.is_staff %}
+                                        (moderator)
+                                    {% endif %}
+                                {% else %}
+                                    Account
+                                {% endif %}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {% if user.is_authenticated %}
+                                    <li><a class="dropdown-item" href="#">My Account</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'GUSpeedruns:logout' %}">Sign out</a></li>
+                                {% else %}
+                                    <li><a class="dropdown-item" href="{% url 'GUSpeedruns:login' %}">Login</a>
+                                    <li><a class="dropdown-item" href="{% url 'GUSpeedruns:register' %}">Register</a>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </div>
+                </ul>
+            </div>
         </div>
+        </nav>
         <hr />
         <div>
             <!-- main content -->
@@ -36,9 +82,5 @@
             {% endblock %}
         </div>
         <hr />
-        <div>
-            <!-- Bottom bar with about -->
-             <a href="{% url 'GUSpeedruns:about' %}">About Us</a>
-        </div>
     </body>
 </html>
