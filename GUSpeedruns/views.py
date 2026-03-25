@@ -121,6 +121,19 @@ def show_game(request, game_name_slug):
         
     return render(request, 'GUSpeedruns/game.html', context=context_dict)
 
+def show_user(request, user_name_slug):
+    context_dict = {}
+
+    try:
+        user = Game.objects.get(slug_name = user_name_slug)
+        context_dict['user'] = user
+        context_dict['user_name_slug'] = user_name_slug
+    
+    except:
+        context_dict['user'] = None
+        
+    return render(request, 'GUSpeedruns/profile.html', context=context_dict)
+
 def comment_detail(request, game_name_slug, run_name_slug, slug_title):
     context_dict = {}
     try:
