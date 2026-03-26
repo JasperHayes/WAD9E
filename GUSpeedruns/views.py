@@ -74,6 +74,8 @@ def register(request):
                              'registered': registered})
     
 def user_login(request):
+    invalid = False
+    disabled = False
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -85,12 +87,18 @@ def user_login(request):
                 login(request, user)
                 return redirect(reverse('GUSpeedruns:homepage'))
             else:
-                return HttpResponse("Your GUSpeedrun account is disabled.")
+                print("Your GUSpeedrun account is disabled.")
+                disabled = True
+                return render(request, 'GUSpeedruns/login.html', 
+                      context = {'invalid': invalid, 'disabled': disabled})
         else:
             print(f"Invalid login details: {username}, {password}")
-            return HttpResponse("Invalid login details supplied.")
+            invalid = True
+            return render(request, 'GUSpeedruns/login.html', 
+                      context = {'invalid': invalid, 'disabled': disabled})
     else:
-        return render(request, 'GUSpeedruns/login.html')
+        return render(request, 'GUSpeedruns/login.html', 
+                      context = {'invalid': invalid, 'disabled': disabled})
 
 @login_required
 def user_logout(request):

@@ -15,4 +15,10 @@
     <br />
     <input type="submit" value="submit" />
 </form>
+{% if invalid %}
+    Invalid login details supplied.
+{% endif %}
+{% if disabled %}
+    Your GUSpeedrun account is disabled.
+{% endif %}
 {% endblock %}
