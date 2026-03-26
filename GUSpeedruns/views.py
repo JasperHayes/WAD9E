@@ -89,16 +89,11 @@ def user_login(request):
             else:
                 print("Your GUSpeedrun account is disabled.")
                 disabled = True
-                return render(request, 'GUSpeedruns/login.html', 
-                      context = {'invalid': invalid, 'disabled': disabled})
         else:
             print(f"Invalid login details: {username}, {password}")
             invalid = True
-            return render(request, 'GUSpeedruns/login.html', 
-                      context = {'invalid': invalid, 'disabled': disabled})
-    else:
-        return render(request, 'GUSpeedruns/login.html', 
-                      context = {'invalid': invalid, 'disabled': disabled})
+    return render(request, 'GUSpeedruns/login.html', 
+            context = {'invalid': invalid, 'disabled': disabled})
 
 @login_required
 def user_logout(request):
