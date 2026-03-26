@@ -150,8 +150,17 @@ def show_game(request, game_name_slug):
     except:
         context_dict['game'] = None
         context_dict['runs'] = None
+
+    response = render(request, 'GUSpeedruns/game.html', context=context_dict)
+
+    cookie_name = f'viewed_game_{game_name_slug}'
+    if not request.COOKIES.get(cookie_name):
+        if context_dict['game']:
+            context_dict['game'].views += 1
+            context_dict['game'].save()
+        response.set_cookie(cookie_name, 'true', max_age=86400)
         
-    return render(request, 'GUSpeedruns/game.html', context=context_dict)
+    return response
 
 def show_user(request, user_name_slug):
     context_dict = {}
