@@ -132,7 +132,7 @@ def show_user(request, user_name_slug):
     context_dict = {}
 
     try:
-        user = Game.objects.get(slug_name = user_name_slug)
+        user = UserProfile.objects.get(slug_name = user_name_slug)
         context_dict['user'] = user
         context_dict['user_name_slug'] = user_name_slug
     
