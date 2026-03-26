@@ -119,7 +119,7 @@ def show_game(request, game_name_slug):
         game = Game.objects.get(slug_name = game_name_slug)
         context_dict['game'] = game
         context_dict['game_name_slug'] = game_name_slug
-        runs = Run.objects.filter(game = game)
+        runs = Run.objects.filter(game = game).order_by('time')[:10]
         context_dict['runs'] = runs
     
     except:

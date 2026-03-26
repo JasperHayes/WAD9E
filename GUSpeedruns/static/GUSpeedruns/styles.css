@@ -5,7 +5,7 @@
 }
 
 .card-body{
-    color: lightgray;
+    color: white;
     background-color: #213136;
 }
 
@@ -14,7 +14,27 @@
 }
 
 .homepage-title{
-    color: lightgray;
+    color: white;
+}
+
+.navbar .btn {
+    background-color: #213136;
+    border-color: #1e3336;
+    color: white;
+}
+
+.navbar .form-control {
+    background-color: #213136;
+    border: 1px solid #188e6e;
+    color: white;
+}
+
+.navbar .form-control::placeholder {
+    color: white;
+}
+
+.pagination{
+    color: white;
 }
 
 nav{
@@ -24,28 +44,14 @@ nav{
 body{  
     font-family: "Montserrat", sans-serif;
     background-color: #213136;
+    color: white;
     margin: 0;
     padding: 0;
 }
 
-.navbar .btn {
-    background-color: #213136;
-    border-color: #1e3336;
-    color: lightgray;
-}
-
-.navbar .form-control {
-    background-color: #213136;
-    border: 1px solid #188e6e;
-    color: lightgray;
-}
-
-.navbar .form-control::placeholder {
-    color: lightgray;
-}
-
-.pagination{
-    color: lightgray;
+h1{
+    color: white;
+    font-family: "Montserrat", sans-serif;
 }
 
 
