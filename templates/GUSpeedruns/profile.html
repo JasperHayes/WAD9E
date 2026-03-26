@@ -5,31 +5,71 @@
 {% endblock %}
 
 {% block body_block %}
-<h1>{{ profile_user }}'s Profile</h1>
+    <div class="container pt-4">
+        <a href="{% url 'GUSpeedruns:homepage' %}" class="btn btn-secondary">&larr; Back</a>
+        <div class="header pt-3 mb-1">
+            <h1>{{ profile_user }}'s Account</h1>
+        </div>
 
-<div>
-    {% if profile_user.picture %}
-        <img src="{{ profile_user.picture.url }}" alt="{{ profile_user }} image" style="max-width: 300px; height: auto;">
-    {% else %}
-        <p>No image available for this user.</p>
-    {% endif %}
-</div>
+        {% if profile_user.picture %}
+            <img src="{{ profile_user.picture.url }}" alt="{{ game.name }}" class="profile-img">
+        {% else %}
+            <p class="mb-0">No image available for this user.</p>
+            <p class="mt-0">You can upload one here if you'd like:</p>
+            <form method="post" action="{% url 'GUSpeedruns:my_account' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in profile_form.visible_fields %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label"></label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="alert alert-danger mt-2">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
 
-<div>
-    <h2>Top Runs</h2>
+        {% endif %}
+        <div class="row pt-3">
+            <div class="row align-items-start px-2">
+                <div class="col-12 col-md-6">
+                    <h2>Your Times:</h2>
+                    {% if runs %}
+                        <ol class="mt-2">
+                            {% for run in runs %}
+                                <li>
+                                    <a href="{% url 'GUSpeedruns:show_run' game_name_slug=run.game.slug_name run_name_slug=run.slug_title %}">
+                                        {{ run.game.name }} - {{ run.time }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% else %}
+                        <p>You have submitted no Runs.</p>
+                    {% endif %}
+                </div>
 
-    {% if runs %}
-        <ol>
-            {% for run in runs %}
-                <li>
-                    <a href="{% url 'GUSpeedruns:show_run' game_name_slug=run.game.slug_name run_name_slug=run.slug_title %}">
-                        {{ run.game.name }} - {{ run.time }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ol>
-    {% else %}
-        <p>No runs available for this user.</p>
-    {% endif %}
-</div>
+            <div class="col-12 col-md-6">
+                <h2>Your Comments:</h2>
+                {% if comments %}
+                    <ul class="mt-2">
+                        {% for comment in comments %}
+                            <li class="mb-1">
+                                <a href="{% url 'GUSpeedruns:comment_detail' game_name_slug=comment.run.game.slug_name run_name_slug=comment.run.slug_title slug_title=comment.slug_title %}">
+                                    {{ comment.run.game }} - {{ comment.title }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>You have posted no comments.</p>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

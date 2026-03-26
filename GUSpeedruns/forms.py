@@ -13,7 +13,7 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    picture = forms.ImageField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control', 'id': 'picture'}))
+    picture = forms.ImageField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control','id': 'picture'}))
     class Meta:
         model = UserProfile
         fields = ('picture',)

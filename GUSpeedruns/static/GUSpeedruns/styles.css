@@ -33,6 +33,9 @@
     color: white;
 }
 
+navbar-text{
+    padding-top: 50px;
+}
 .pagination{
     color: white;
 }
@@ -43,8 +46,18 @@
     object-fit: cover;
 }
 
+.profile-img{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
 .hyperlink{
     color: white;
+}
+
+.heading-subtext{
+    font-size:20px;
 }
 nav{
     background-color: #188e6e;

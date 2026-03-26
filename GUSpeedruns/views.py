@@ -49,7 +49,7 @@ def register(request):
     registered = False
     if request.method == 'POST':
         user_form = UserForm(request.POST)
-        profile_form = UserProfileForm(request.POST)
+        profile_form = UserProfileForm(request.POST, request.FILES)
         
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save()
@@ -104,10 +104,20 @@ def user_logout(request):
 def my_account(request):
     profile_user = UserProfile.objects.get(user=request.user)
     runs = Run.objects.filter(user=profile_user).select_related('game').order_by('time')[:10]
-
+    comments = Comment.objects.filter(user=profile_user)
+    
+    if request.method == 'POST':
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=profile_user)
+        if profile_form.is_valid():
+            profile_form.save()
+            return redirect('GUSpeedruns:my_account')
+    else:
+        profile_form = UserProfileForm(instance=profile_user)
     context_dict = {
         'profile_user': profile_user,
+        'profile_form': profile_form,
         'runs': runs,
+        'comments' : comments,
     }
 
     return render(request, 'GUSpeedruns/profile.html', context=context_dict)
@@ -203,16 +213,16 @@ def add_comment(request, game_name_slug, run_name_slug):
     context_dict = {'form': form, 'run': run, 'game_name_slug':game_name_slug}
     return render(request, 'GUSpeedruns/add_comment.html', context=context_dict)
 
-@staff_member_required
 def delete_comment(request, game_name_slug, run_name_slug, slug_title):
     if request.method == 'POST':
         context_dict = {}
         try:
             comment = Comment.objects.get(slug_title=slug_title)
-            context_dict['comment'] = comment
-            context_dict['game_name_slug'] = game_name_slug
-            context_dict['run_name_slug'] = run_name_slug
-            comment.delete()
+            if request.user.is_staff or request.user == comment.user.user:
+                context_dict['comment'] = comment
+                context_dict['game_name_slug'] = game_name_slug
+                context_dict['run_name_slug'] = run_name_slug
+                comment.delete()
         
         except Comment.DoesNotExist:
             context_dict['comment'] = None
