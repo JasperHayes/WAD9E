@@ -37,13 +37,12 @@ class CommentForm(forms.ModelForm):
 
 
 class RunForm(forms.ModelForm):
-    video = forms.URLField(max_length= 200, help_text= "Youtube link:")
-    hours = forms.IntegerField(min_value=0, help_text="Time - Hr:")
-    minutes = forms.IntegerField(min_value=0, max_value=59, help_text= "Min:")
-    seconds = forms.IntegerField(min_value=0, max_value=59, help_text="Sec:")
-    milliseconds = forms.IntegerField(min_value=0, max_value=999, help_text="Ms:")
-    description = forms.CharField(max_length=Run.DESCRIPTION_MAX_LENGTH, help_text= "Description:")
-
+    video = forms.URLField(max_length=200, help_text="Youtube link:", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your YouTube video link', 'id': 'id_video'}))
+    hours = forms.IntegerField(min_value=0, help_text="Time - Hr:", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter hours', 'id': 'id_hours'}))
+    minutes = forms.IntegerField(min_value=0, max_value=59, help_text="Min:", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter minutes', 'id': 'id_minutes'}))
+    seconds = forms.IntegerField(min_value=0, max_value=59, help_text="Sec:", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter seconds', 'id': 'id_seconds'}))
+    milliseconds = forms.IntegerField(min_value=0, max_value=999, help_text="Ms:", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter milliseconds', 'id': 'id_milliseconds'}))
+    description = forms.CharField(max_length=Run.DESCRIPTION_MAX_LENGTH, help_text="Description:", widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter a short description', 'id': 'id_description', 'rows': 4}))
     class Meta:
         model = Run
         fields = ('video', 'description', 'hours', 'minutes', 'seconds', 'milliseconds')
