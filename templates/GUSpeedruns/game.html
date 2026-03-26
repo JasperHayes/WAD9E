@@ -5,13 +5,16 @@
 {% endblock %}
 
 {% block body_block %}
-<div class="header text-center pt-3">
+
+<div class="container pt-3">
+    <a href="{% url 'GUSpeedruns:homepage'%}" class="btn btn-secondary">&larr; Back</a>
+</div>
+<div class="header text-center pt">
     <h1>{{ game.name }}</h1>
     <p><small>Released on: {{ game.date_released }}</small></p>
 </div>
-    
 
-<div class="container">
+<div class="container pt-5">
     <div class="row align-items-start px-4">
         <div class="col-12 col-md-6">
             <h2>Leaderboard</h2>
@@ -20,7 +23,7 @@
                 <ol>
                     {% for run in runs%}
                         <li>
-                            <a href="{% url 'GUSpeedruns:show_run' game_name_slug=game_name_slug run_name_slug=run.slug_title %}">
+                            <a href="{% url 'GUSpeedruns:show_run' game_name_slug=game_name_slug run_name_slug=run.slug_title %}" class="hyperlink">
                             {{ run.user }} - {{ run.time }}
                             </a>
                         </li>
@@ -29,19 +32,20 @@
             {% else %}
                 <p>No runs available for this game.</p>
             {% endif %}
+            <div>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'GUSpeedruns:add_run' game_name_slug=game_name_slug %}" class="btn btn-success mt-3">Add Run</a> <br />
+                {% endif %}
+            </div>
         </div>
-    </div>
-    <div>
-        {% if game.image %}
-            <img src="{{ game.image.url }}" alt="{{ game.name }} image" style="max-width: 300px; height: auto;">
-        {% else %}
-            <p>No image available for this game.</p>
-        {% endif %}
-    </div>
-    <div>
-        {% if user.is_authenticated %}
-            <a href="{% url 'GUSpeedruns:add_run' game_name_slug=game_name_slug %}">Add Run</a> <br />
-        {% endif %}
+        <div class="col-12 col-md-6 text-center">
+            {% if game.image %}
+                <img src="{{ game.image.url }}" alt="{{ game.name }} image" class="game-img border border-5 border-dark">
+            {% else %}
+                <p>No image available for this game.</p>
+            {% endif %}
+            </div>
+        </div>
     </div>
 </div>    
 {% endblock %}
