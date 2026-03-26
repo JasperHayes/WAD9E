@@ -17,6 +17,11 @@
             {{ field.errors }}
             {{ field.help_text }}
             {{ field }}
+
+            {% if field.name == "video" %}
+                <button type="button" onclick="fetchVideo()">Fetch Video Info</button>
+            {% endif %}
+
             {% if field.field.widget.input_type != "number" %}
                 <br/>
             {% endif %}
@@ -25,4 +30,43 @@
         <input type="submit" name="submit" value="Upload Run" />
     </form>
 </div>
+
+<script>
+const fetchUrl = "{% url 'GUSpeedruns:fetch_youtube' %}";
+
+function fetchVideo() {
+    const url = document.getElementById("id_video").value;
+
+    fetch(`${fetchUrl}?url=${encodeURIComponent(url)}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Data:", data);
+
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            let totalSeconds = data.duration;
+
+            let hours = Math.floor(totalSeconds / 3600);
+            totalSeconds %= 3600;
+
+            let minutes = Math.floor(totalSeconds / 60);
+            let seconds = totalSeconds % 60;
+
+            document.getElementById("id_hours").value = hours;
+            document.getElementById("id_minutes").value = minutes;
+            document.getElementById("id_seconds").value = seconds;
+            document.getElementById("id_milliseconds").value = 0;
+
+            const descField = document.getElementById("id_description");
+            if (descField) {
+                descField.value = data.description;
+            }
+        })
+        .catch(error => console.error("Error:", error));
+}
+</script>
 {% endblock %}
+

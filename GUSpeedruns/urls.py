@@ -6,6 +6,7 @@ app_name = 'GUSpeedruns'
 urlpatterns = [
     path('', views.homepage, name = "homepage"),
     path('about/', views.about, name = "about"),
+    path("fetch-youtube/", views.fetch_youtube_data, name="fetch_youtube"),
     path('register/', views.register, name='register'),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),

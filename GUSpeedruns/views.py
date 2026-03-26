@@ -9,6 +9,13 @@ from GUSpeedruns.forms import UserForm, UserProfileForm, UploadGameForm, Comment
 from datetime import timedelta
 from urllib.parse import urlparse, parse_qs
 from django.core.paginator import Paginator
+import re
+import requests
+import isodate
+from django.http import JsonResponse
+
+#for youtube API
+API_KEY = "AIzaSyCOa_I-kpQZIJXISS5aQ0WrkyGPrz9tvEI"
 
 def homepage(request):
     query = request.GET.get('q', '').strip()
@@ -181,6 +188,26 @@ def add_comment(request, game_name_slug, run_name_slug):
     context_dict = {'form': form, 'run': run, 'game_name_slug':game_name_slug}
     return render(request, 'GUSpeedruns/add_comment.html', context=context_dict)
 
+@staff_member_required
+def delete_comment(request, game_name_slug, run_name_slug, slug_title):
+    if request.method == 'POST':
+        context_dict = {}
+        try:
+            comment = Comment.objects.get(slug_title=slug_title)
+            context_dict['comment'] = comment
+            context_dict['game_name_slug'] = game_name_slug
+            context_dict['run_name_slug'] = run_name_slug
+            comment.delete()
+        
+        except Comment.DoesNotExist:
+            context_dict['comment'] = None
+            
+
+    return redirect(reverse('GUSpeedruns:show_run', kwargs={
+        'game_name_slug': game_name_slug,
+        'run_name_slug': run_name_slug
+    }))
+
 
 def show_run(request, game_name_slug, run_name_slug):
     context_dict = {}
@@ -253,22 +280,35 @@ def delete_run(request, game_name_slug, run_name_slug):
         
     return redirect(reverse('GUSpeedruns:show_game', kwargs={'game_name_slug': game_name_slug}))
 
-@staff_member_required
-def delete_comment(request, game_name_slug, run_name_slug, slug_title):
-    if request.method == 'POST':
-        context_dict = {}
-        try:
-            comment = Comment.objects.get(slug_title=slug_title)
-            context_dict['comment'] = comment
-            context_dict['game_name_slug'] = game_name_slug
-            context_dict['run_name_slug'] = run_name_slug
-            comment.delete()
-        
-        except Comment.DoesNotExist:
-            context_dict['comment'] = None
-            
 
-    return redirect(reverse('GUSpeedruns:show_run', kwargs={
-        'game_name_slug': game_name_slug,
-        'run_name_slug': run_name_slug
-    }))
+
+def get_video_data(video_id):
+    url = "https://www.googleapis.com/youtube/v3/videos"
+    params = {
+        "part": "snippet,contentDetails",
+        "id": video_id,
+        "key": API_KEY
+    }
+    response = requests.get(url, params=params)
+    data = response.json()
+    if not data["items"]:
+        return None
+    item = data["items"][0]
+    duration = isodate.parse_duration(item["contentDetails"]["duration"])
+    return {
+        "description": item["snippet"]["description"],
+        "duration": int(duration.total_seconds())
+    }
+
+
+def fetch_youtube_data(request):
+    url = request.GET.get("url")
+    video_id = get_youtube_id(url)
+    if not video_id:
+        return JsonResponse({"error": "Invalid URL"}, status=400)
+    video_data = get_video_data(video_id)
+    if not video_data:
+        return JsonResponse({"error": "Video not found"}, status=404) 
+    return JsonResponse(video_data)
+
+
