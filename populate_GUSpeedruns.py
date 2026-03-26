@@ -14,13 +14,13 @@ def populate():
 
     users = [
         {'username': 'JamesSpeedrunner', 'password': "pword", 'email': 'jamesspeedrunner@gmail.com', 'moderator' : False},
-        {'username': 'AlexiSpeedrunner', 'password': "p1234", 'email': 'alexispeedrunner@gmail.com', 'moderator' : False},
+        {'username': 'AlexiSpeedrunner', 'password': "passw", 'email': 'alexispeedrunner@gmail.com', 'moderator' : False},
         {'username': 'KatherineModerator', 'password': "passcode", 'email': 'jamesspeedrunner@gmail.com', 'moderator' : True},
     ]
 
     games = [
-        {'name': 'Minecraft', 'date': datetime.date(2009,5,17)},
-        {'name': 'Hollow Knight', 'date': datetime.date(2017,2,24)},
+        {'name': 'Minecraft', 'date': datetime.date(2009,5,17), 'image': "game_images/Minecraft_2024_cover_art_zinWGjY.png"},
+        {'name': 'Hollow Knight', 'date': datetime.date(2017,2,24), 'image': "game_images/hollowknight-1280-1529623462572_160w_W0fNkIL.webp"},
     ]
 
     runs = [
@@ -42,7 +42,7 @@ def populate():
     
 
     for game in games:
-        g = add_game(game['name'], game['date'])
+        g = add_game(game['name'], game['date'], game['image'])
         game_hold.append(g)
 
     for run in runs:
@@ -58,23 +58,24 @@ def populate():
 
 
 def add_user(username, password, email, moderator):
-    u, created = User.objects.get_or_create(username=username)
-    if not created:
-        u.is_staff = moderator
-        u.password=password,
-        u.email=email
-        u.save()
+    u = User.objects.get_or_create(username=username)[0]
+    u.email=email
+    u.is_staff = moderator
+    u.set_password(password)
+    u.save()
     p = UserProfile.objects.get_or_create(user=u)[0]
     p.save()
     return p
     
-def add_game(name, date, views = 0):
+def add_game(name, date, image, views = 0):
     g = Game.objects.get_or_create(
         name = name,
         date_released = date,
         defaults={
-            'views': views
+            'views': views,
         })[0]
+    if image:
+        g.image = image
     g.save()
     return g
 
