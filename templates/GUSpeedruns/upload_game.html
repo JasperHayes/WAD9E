@@ -5,21 +5,36 @@
 {% endblock %}
 
 {% block body_block %}
-<h1>Upload a new Game</h1>
+<div class="container pt-3">
+    <a href="{% url 'GUSpeedruns:homepage'%}" class="btn btn-secondary m-0">&larr; Back</a>
+    <div class="header pt-3">
+        <h1>Upload a new Game</h1>
+    </div>
 
-<div>
-    <form id="game_form" method="post" enctype="multipart/form-data" action="{% url 'GUSpeedruns:upload_game' %}">
+    <div class="text_input pt-3 gy-2">
+        <form id="game_form" method="post" action="{% url 'GUSpeedruns:upload_game' %}" enctype="multipart/form-data">
         {% csrf_token %}
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
+        
         {% for field in form.visible_fields %}
-            {{ field.errors }}
-            {{ field.help_text }}
-            {{ field }}
-            <br/>
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+
+                {{ field }}
+
+                {% if field.help_text %}
+                    <div class="form-text">
+                        {{ field.help_text }}
+                    </div>
+                {% endif %}
+                {% if field.errors %}
+                    <div class="alert alert-danger mt-2">
+                        {{ field.errors }}
+                    </div>
+                {% endif %}
+            </div>
         {% endfor %}
-        <input type="submit" name="submit" value="Upload Game" />
-    </form>
+        <button type="submit" class="btn btn-primary">Upload Game</button>
+        </form>
+    </div>
 </div>
 {% endblock %}

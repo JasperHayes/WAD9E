@@ -18,10 +18,9 @@ class UserProfileForm(forms.ModelForm):
 
 
 class UploadGameForm(forms.ModelForm):
-    name = forms.CharField(max_length=Game.NAME_MAX_LENGTH, help_text="Please enter the game name:")
-    image = forms.ImageField(required=False, help_text="Upload image (optional):")
-    date_released = forms.DateField( help_text="Please enter the game's release date:", widget=forms.DateInput(attrs={'type': 'date'}))
-
+    name = forms.CharField(max_length=Game.NAME_MAX_LENGTH, help_text="Please enter the game name:", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter the game name', 'id': 'id_name'}))
+    image = forms.ImageField(required=False, help_text="Upload image (optional):", widget=forms.ClearableFileInput(attrs={'class': 'form-control', 'id': 'id_image'}))
+    date_released = forms.DateField(help_text="Please enter the game's release date:", widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control', 'id': 'id_date_released'}))
     class Meta:
         model = Game
         fields = ("name", "image", "date_released")

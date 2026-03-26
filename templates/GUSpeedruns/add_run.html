@@ -14,30 +14,30 @@
         <form id="run_form" method="post" action="{% url 'GUSpeedruns:add_run' game_name_slug %}">
         {% csrf_token %}
 
-            {% for field in form.visible_fields %}
-                <div class="mb-3">
-                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+        {% for field in form.visible_fields %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
 
-                    {{ field }}
+                {{ field }}
 
-                    {% if field.name == "video" %}
-                        <button type="button" class="btn btn-secondary mt-2" onclick="fetchVideo()">Fetch Video Info</button>
-                    {% endif %}
+                {% if field.name == "video" %}
+                    <button type="button" class="btn btn-secondary mt-2" onclick="fetchVideo()">Fetch Video Info</button>
+                {% endif %}
 
-                    {% if field.help_text %}
-                        <div class="form-text">
-                            {{ field.help_text }}
-                        </div>
-                    {% endif %}
-                    {% if field.errors %}
-                        <div class="alert alert-danger mt-2">
-                            {{ field.errors }}
-                        </div>
-                    {% endif %}
-                </div>
-            {% endfor %}
+                {% if field.help_text %}
+                    <div class="form-text">
+                        {{ field.help_text }}
+                    </div>
+                {% endif %}
+                {% if field.errors %}
+                    <div class="alert alert-danger mt-2">
+                        {{ field.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
 
-            <button type="submit" class="btn btn-primary">Upload Run</button>
+        <button type="submit" class="btn btn-primary">Upload Run</button>
     </form>
 </div>
 
