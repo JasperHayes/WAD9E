@@ -8,19 +8,35 @@
     <div class="container pt-4">
         <a href="{% url 'GUSpeedruns:homepage' %}" class="btn btn-secondary">&larr; Back</a>
         <div class="header pt-3 mb-1">
-            <h1>{{ user }}'s Account</h1>
+            <h1>{{ profile_user }}'s Account</h1>
         </div>
 
-        {% if user.picture %}
-            <img src="{{ user.picture.url }}" alt="{{ game.name }}" class="profile-img">
+        {% if profile_user.picture %}
+            <img src="{{ uprofile_userr.picture.url }}" alt="{{ game.name }}" class="profile-img">
         {% else %}
             <p class="mb-0">No image available for this user.</p>
-
+            <p class="mt-0">You can upload one here if you'd like:</p>
+            <form method="post" action="{% url 'GUSpeedruns:my_account' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in profile_form.visible_fields %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label"></label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="alert alert-danger mt-2">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
         {% endif %}
         <div class="row pt-3">
             <div class="row align-items-start px-2">
                 <div class="col-12 col-md-6">
-                    <h2>{{ user }}'s Times:</h2>
+                    <h2>Your Times:</h2>
                     {% if runs %}
                         <ol class="mt-2">
                             {% for run in runs %}
@@ -32,12 +48,12 @@
                             {% endfor %}
                         </ol>
                     {% else %}
-                        <p>{{ user }} has submitted no Runs.</p>
+                        <p>You have submitted no Runs.</p>
                     {% endif %}
                 </div>
 
             <div class="col-12 col-md-6">
-                <h2>{{user}}'s Comments</h2>
+                <h2>Your Comments:</h2>
                 {% if comments %}
                     <ul class="mt-2">
                         {% for comment in comments %}

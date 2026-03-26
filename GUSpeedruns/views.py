@@ -102,26 +102,25 @@ def user_logout(request):
 
 @login_required
 def my_account(request):
-    user = UserProfile.objects.get(user=request.user)
-    runs = Run.objects.filter(user=user).select_related('game').order_by('time')[:10]
-    comments = Comment.objects.filter(user=user)
-    is_logged_in_user = True
+    profile_user = UserProfile.objects.get(user=request.user)
+    runs = Run.objects.filter(user=profile_user).select_related('game').order_by('time')[:10]
+    comments = Comment.objects.filter(user=profile_user)
+    
     if request.method == 'POST':
-        profile_form = UserProfileForm(request.POST, request.FILES, instance=user)
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=profile_user)
         if profile_form.is_valid():
             profile_form.save()
             return redirect('GUSpeedruns:my_account')
     else:
-        profile_form = UserProfileForm(instance=user)
+        profile_form = UserProfileForm(instance=profile_user)
     context_dict = {
-        'is_logged_in_user': is_logged_in_user,
-        'user': user,
+        'profile_user': profile_user,
         'profile_form': profile_form,
         'runs': runs,
         'comments' : comments,
     }
 
-    return render(request, 'GUSpeedruns/profile.html', context=context_dict)
+    return render(request, 'GUSpeedruns/my_account.html', context=context_dict)
 
 @staff_member_required
 def upload_game(request):
