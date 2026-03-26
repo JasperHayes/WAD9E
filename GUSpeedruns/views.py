@@ -100,6 +100,18 @@ def user_logout(request):
     logout(request)
     return(redirect(reverse('GUSpeedruns:homepage')))
 
+@login_required
+def my_account(request):
+    profile_user = UserProfile.objects.get(user=request.user)
+    runs = Run.objects.filter(user=profile_user).select_related('game').order_by('time')[:10]
+
+    context_dict = {
+        'profile_user': profile_user,
+        'runs': runs,
+    }
+
+    return render(request, 'GUSpeedruns/profile.html', context=context_dict)
+
 @staff_member_required
 def upload_game(request):
     form = UploadGameForm()
