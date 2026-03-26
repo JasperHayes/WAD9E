@@ -1,5 +1,5 @@
+{% load static %}
 <!DOCTYPE html>
-
 <html>
     <head lang="en">
         <meta charset="UTF-8" />
@@ -12,10 +12,12 @@
         </title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="{% static 'GUSpeedruns/styles.css' %}">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="#">GU Speedruns</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -41,46 +43,43 @@
                     </li>
                 </ul>
                 
-
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <div class="d-flex ms-auto">
                     <form method="get" action="{% url 'GUSpeedruns:homepage' %}" class="d-flex" role="search">
                         <input class="form-control me-2" type="search" placeholder="Search game name" aria-label="Search" name="q" value="{{ query }}">
-                        <button class="btn btn-light" type="submit">Search</button>
+                        <button class="btn" type="submit">Search</button>
                     </form>
+                </div>
 
-                    <div>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                {% if user.is_authenticated %}
-                                    {{ user.username }}
-                                    {% if user.is_staff %}
-                                        (moderator)
-                                    {% endif %}
-                                {% else %}
-                                    Account
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if user.is_authenticated %}
+                                {{ user.username }}
+                                {% if user.is_staff %}
+                                    (moderator)
                                 {% endif %}
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                {% if user.is_authenticated %}
-                                    <li><a class="dropdown-item" href="#">My Account</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'GUSpeedruns:logout' %}">Sign out</a></li>
-                                {% else %}
-                                    <li><a class="dropdown-item" href="{% url 'GUSpeedruns:login' %}">Login</a>
-                                    <li><a class="dropdown-item" href="{% url 'GUSpeedruns:register' %}">Register</a>
-                                {% endif %}
-                            </ul>
-                        </li>
-                    </div>
+                            {% else %}
+                                Account
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% if user.is_authenticated %}
+                                <li><a class="dropdown-item" href="#">My Account</a></li>
+                                <li><a class="dropdown-item" href="{% url 'GUSpeedruns:logout' %}">Sign out</a></li>
+                            {% else %}
+                                <li><a class="dropdown-item" href="{% url 'GUSpeedruns:login' %}">Login</a>
+                                <li><a class="dropdown-item" href="{% url 'GUSpeedruns:register' %}">Register</a>
+                            {% endif %}
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
         </nav>
-        <hr />
         <div>
             <!-- main content -->
             {% block body_block %}
             {% endblock %}
         </div>
-        <hr />
     </body>
 </html>

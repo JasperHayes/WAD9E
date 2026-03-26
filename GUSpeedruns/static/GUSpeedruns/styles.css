@@ -1,0 +1,52 @@
+.card-img-top {
+    width: 100%;
+    height: 300px;
+    object-fit: fill;
+}
+
+.card-body{
+    color: lightgray;
+    background-color: #213136;
+}
+
+.card{
+    background-color: #1e3336;
+}
+
+.homepage-title{
+    color: lightgray;
+}
+
+nav{
+    background-color: #188e6e;
+}
+
+body{  
+    font-family: "Montserrat", sans-serif;
+    background-color: #213136;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar .btn {
+    background-color: #213136;
+    border-color: #1e3336;
+    color: lightgray;
+}
+
+.navbar .form-control {
+    background-color: #213136;
+    border: 1px solid #188e6e;
+    color: lightgray;
+}
+
+.navbar .form-control::placeholder {
+    color: lightgray;
+}
+
+.pagination{
+    color: lightgray;
+}
+
+
+
