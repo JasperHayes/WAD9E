@@ -37,6 +37,15 @@
     color: white;
 }
 
+.game-img{
+    width: 100%;
+    height: 600px;
+    object-fit: cover;
+}
+
+.hyperlink{
+    color: white;
+}
 nav{
     background-color: #188e6e;
 }
