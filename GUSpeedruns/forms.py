@@ -26,14 +26,14 @@ class UploadGameForm(forms.ModelForm):
         model = Game
         fields = ("name", "image", "date_released")
 
-
 class CommentForm(forms.ModelForm):
-    title = forms.CharField(max_length=Comment.TITLE_MAX_LENGTH, help_text="Please enter a title.")
-    content = forms.CharField(max_length=Comment.CONTENT_MAX_LENGTH, help_text="Please enter your comment.")
+    title = forms.CharField(max_length=Comment.TITLE_MAX_LENGTH, help_text="Please enter a title", widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'Enter a title for your comment','id': 'title'}))                                                                                                                 
+    content = forms.CharField(max_length=Comment.CONTENT_MAX_LENGTH, help_text="Please enter your comment:", widget=forms.Textarea(attrs={'class': 'form-control','placeholder': 'Write your comment here','id': 'content', 'rows':8}))
     
     class Meta: 
         model = Comment
         fields = ['title', 'content']
+
 
 
 class RunForm(forms.ModelForm):

@@ -64,7 +64,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             {% if user.is_authenticated %}
-                                <li><a class="dropdown-item" href="#">My Account</a></li>
+                                <li><a class="dropdown-item" href="{% url 'GUSpeedruns:show_user' user_name_slug=user.username %}">My Account</a></li>
                                 <li><a class="dropdown-item" href="{% url 'GUSpeedruns:logout' %}">Sign out</a></li>
                             {% else %}
                                 <li><a class="dropdown-item" href="{% url 'GUSpeedruns:login' %}">Login</a>

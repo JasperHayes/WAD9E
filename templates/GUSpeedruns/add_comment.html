@@ -3,21 +3,47 @@
 {% block title_block %}
     Upload comment
 {% endblock %}    
-{% block body_block %}
-    <h1>Upload comment</h1>
-    <div>
-        <form id="comment_form" method="post" action="{% url 'GUSpeedruns:add_comment' game_name_slug run.slug_title %}">
-            {% csrf_token %}
-            {% for hidden in form.hidden_fields %}
-                {{ hidden }}
-            {% endfor %}
-            {% for field in form.visible_fields %}
-                {{ field.errors }}
-                {{ field.help_text }}
-                {{ field }}
-            {% endfor %}
-            <br />
-            <input type="submit" name="submit" value="Add Comment" />
-        </form>
+{% block body_block %} 
+    <div class="container pt-3">
+        <a href="{% url 'GUSpeedruns:show_game' game_name_slug=game_name_slug %}" class="btn btn-secondary m-0">&larr; Back</a>
+            <div class="header pt-3">
+            <h1>Upload comment</h1>
+        </div>
+        <div class="text_input pt-3 gy-2">
+            <form id="comment_form" method="post" action="{% url 'GUSpeedruns:add_comment' game_name_slug run.slug_title %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    {{ form.title }}
+                    {% if form.title.help_text %}
+                        <div class="form-text">
+                            {{ form.title.help_text }}
+                        </div>
+                    {% endif %}
+                    {% if form.title.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{ form.title.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="content" class="form-label">Comment</label>
+                    {{ form.content }}
+                    {% if form.content.help_text %}
+                        <div class="form-text">
+                            {{ form.content.help_text }}
+                        </div>
+                    {% endif %}
+                    {% if form.content.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{ form.content.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary">Add Comment</button>
+            </form>
+        </div>
     </div>
 {% endblock %}
