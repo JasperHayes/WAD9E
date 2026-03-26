@@ -6,10 +6,13 @@ from django.contrib.auth.models import User
 class UserProfile(models.Model):
     #user has: username, password, email, first name, last name
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    #moderator if is_staff is true (base User class)
+    slug_name = models.SlugField(unique=True, default="")
     picture = models.ImageField(upload_to='profile_images', blank=True)
 
+    def save(self, *args, **kwargs):
+        self.slug_name = slugify(self.user.username)
+        super(UserProfile, self).save(*args, **kwargs)
+        
     def __str__(self):
         return self.user.username
     
