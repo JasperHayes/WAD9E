@@ -13,7 +13,7 @@
 
         {% if user.picture %}
             <img src="{{ user.picture.url }}" alt="{{ game.name }}" class="profile-img">
-        {% else %}
+        {% elif is_logged_in_user %}
             <p class="mb-0">No image available for this user.</p>
             <p class="mt-0">You can upload one here if you'd like:</p>
             <form method="post" action="{% url 'GUSpeedruns:my_account' %}" enctype="multipart/form-data">
@@ -32,6 +32,8 @@
                 {% endfor %}
             <button type="submit" class="btn btn-primary">Upload</button>
         </form>
+        {% else %}
+            <p class="mb-0">No image available for this user.</p>
 
         {% endif %}
         <div class="row pt-3">

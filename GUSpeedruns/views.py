@@ -105,7 +105,7 @@ def my_account(request):
     user = UserProfile.objects.get(user=request.user)
     runs = Run.objects.filter(user=user).select_related('game').order_by('time')[:10]
     comments = Comment.objects.filter(user=user)
-    
+    is_logged_in_user = True
     if request.method == 'POST':
         profile_form = UserProfileForm(request.POST, request.FILES, instance=user)
         if profile_form.is_valid():
@@ -114,6 +114,7 @@ def my_account(request):
     else:
         profile_form = UserProfileForm(instance=user)
     context_dict = {
+        'is_logged_in_user': is_logged_in_user,
         'user': user,
         'profile_form': profile_form,
         'runs': runs,
