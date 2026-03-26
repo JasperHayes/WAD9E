@@ -5,45 +5,56 @@
 {% endblock %}
 
 {% block body_block %}
-    <div>
+    <div class="container pt-3">
+        <a href="{% url 'GUSpeedruns:show_game' game_name_slug=game_name_slug %}" class="btn btn-secondary">&larr; Back</a>
+    </div>
+    <div class="container pt-3">
     {% if run %}
-        <div>
-            <h1>{{ run.title }} on {{ run.game.name }} </h1>
-            <iframe src="https://www.youtube.com/embed/{{ run.video_url_id }}" allowfullscreen></iframe>
-            <br/>
-            Description: <br/>
-            {{ run.description }}
+        <div class="header pt">
+            <h1>{{ run.game.name }} run by {{ run.user }} in {{run.time}} </h1>
         </div>
-        <hr />
-        <div>
-            {% if comments %}
-                <ul>
-                    {% for comment in comments %}
-                        <li>
-                            <a href="{% url 'GUSpeedruns:comment_detail' game_name_slug=game_name_slug run_name_slug=run.slug_title slug_title=comment.slug_title %}">
-                            <strong>{{ comment.user }}</strong>: {{ comment.title }}
-                            </a>
-                            <p>{{ comment.content }}</p>
-                            </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-            <strong>No comments yet.</strong>
-            {% endif %}
+
+        <div class="row pt-5">
+            <div class="col-lg-8 mb-4">
+                <div class="ratio ratio-16x9">
+                    <iframe src="https://www.youtube.com/embed/{{ run.video_url_id }}" allowfullscreen></iframe>
+                </div>
+                <div class="mt-3">
+                    Description - </br>
+                    {{ run.description }}
+                </div>
+            </div>
+        
+
+            <div class="col-lg-4">
+                <h3>Comments</h3>
+                    {% if comments %}
+                        <ul>
+                            {% for comment in comments %}
+                                <li>
+                                    <a href="{% url 'GUSpeedruns:comment_detail' game_name_slug=game_name_slug run_name_slug=run.slug_title slug_title=comment.slug_title %}">
+                                    <strong>{{ comment.user }}</strong>: {{ comment.title }}
+                                    </a>
+                                    <p class="mb-1">{{ comment.content }}</p>
+                                    </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                    <strong>No comments yet.</strong>
+                    {% endif %}
+                    <div>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'GUSpeedruns:add_comment' game_name_slug=game_name_slug run_name_slug=run.slug_title %}" class="btn btn-success pt-2 mt-2">Add Comment</a> <br />
+                        {% endif %}
+                        {% if user.is_staff %}
+                            <form method="post" action="{% url 'GUSpeedruns:delete_run' game_name_slug=game_name_slug run_name_slug=run.slug_title %}" class="btn btn-danger mt-2">Delete run</a>
+                                {% csrf_token %}
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            {% if user.is_authenticated %}
-                <a href="{% url 'GUSpeedruns:add_comment' game_name_slug=game_name_slug run_name_slug=run.slug_title %}">Add Comment</a> <br />
-            {% endif %}
-            {% if user.is_staff %}
-                <form method="post" action="{% url 'GUSpeedruns:delete_run' game_name_slug=game_name_slug run_name_slug=run.slug_title %}">Delete run</a> 
-                    {% csrf_token %}
-                    <button type="submit">Delete</button><br />
-                </form>
-            {% endif %}
-        </div>
-        <div>
-            <a href="{% url 'GUSpeedruns:show_game' game_name_slug=game_name_slug %}">Back to {{ game.name }}</a> <br />
     {% else %}
         <strong>The specified run does not exist.</strong>
     {% endif %}
