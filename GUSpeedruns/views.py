@@ -169,9 +169,12 @@ def show_user(request, user_name_slug):
         user = UserProfile.objects.get(slug_name = user_name_slug)
         context_dict['user'] = user
         context_dict['user_name_slug'] = user_name_slug
+        context_dict['runs'] = Run.objects.filter(user=user).select_related('game').order_by('time')[:10]
+        context_dict['comments'] = Comment.objects.filter(user=user)
     
     except:
         context_dict['user'] = None
+      
         
     return render(request, 'GUSpeedruns/profile.html', context=context_dict)
 
