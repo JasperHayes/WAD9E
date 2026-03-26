@@ -4,14 +4,16 @@ from GUSpeedruns.models import Game, Comment, UserProfile, Run
 
         
 class UserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
-    
+    username = forms.CharField( widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Username', 'id': 'username'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter Username', 'id': 'password'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter email', 'id': 'email'}))
     class Meta:
         model = User
         fields = ('username', 'email', 'password',)
 
 
 class UserProfileForm(forms.ModelForm):
+    picture = forms.ImageField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control', 'id': 'picture'}))
     class Meta:
         model = UserProfile
         fields = ('picture',)

@@ -6,22 +6,48 @@
 {% endblock %}
 
 {% block body_block %}
-<h1>Register for GUSpeedruns</h1>
-{% if registered %}
-Thank you for registering!
-<a href="{% url 'GUSpeedruns:homepage' %}">Return to the homepage.</a><br />
-{% else %}
-Register here!<br />
-<form id= "user_form" method="post" action="{% url 'GUSpeedruns:register' %}"
-    enctype="multipart/form-data">
+    <div class="container pt-3">
+        <a href="{% url 'GUSpeedruns:homepage'%}" class="btn btn-secondary">&larr; Back</a>
+        <div class="header pt-3 mb-0">
+            <h1>Register for GUSpeedruns</h1>
+        </div>
 
-    {% csrf_token %}
+        {% if registered %}
+            Thank you for registering!
+            <a href="{% url 'GUSpeedruns:homepage' %}">Return to the homepage.</a><br />
+        {% else %}
+            <form id="user_form" method="post" action="{% url 'GUSpeedruns:register' %}" enctype="multipart/form-data">
+            {% csrf_token %}
 
-    {{ user_form.as_p }}
-    {{ profile_form.as_p }}
+                {% for field in user_form.visible_fields %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="alert alert-danger mt-2">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
 
-    <input type="submit" name="submit" value="Register" />
-</form>
-{% endif %}
+                {% for field in profile_form.visible_fields %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="alert alert-danger mt-2">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        {% endif %}
+    </div>
 {% endblock %}
 

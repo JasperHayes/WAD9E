@@ -6,19 +6,31 @@
 {% endblock %}
 
 {% block body_block %}
-<h1>Login to GUSpeedruns</h1>
-<form id="login_form" method="post" action="{% url 'GUSpeedruns:login' %}">
-    {% csrf_token %}
-    Username: <input type="text" name="username" value="" size="50" />
-    <br />
-    Password: <input type="password" name="password" value="" size="50" />
-    <br />
-    <input type="submit" value="submit" />
-</form>
-{% if invalid %}
-    Invalid login details supplied.
-{% endif %}
-{% if disabled %}
-    Your GUSpeedrun account is disabled.
-{% endif %}
+    <div class="container pt-3">
+        <a href="{% url 'GUSpeedruns:homepage'%}" class="btn btn-secondary">&larr; Back</a>
+        <div class="header pt-3 mb-0">
+            <h1>Login to GUSpeedruns</h1>
+        </div>
+        <div class="text_input pt-3 gy-2">
+            <form id="login_form" method="post" action="{% url 'GUSpeedruns:login' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username" />
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" />
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        
+            {% if invalid %}
+                Invalid login details supplied.
+            {% endif %}
+            {% if disabled %}
+                Your GUSpeedrun account is disabled.
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
