@@ -36,7 +36,7 @@
                     {% endfor %}
                 </div>
 
-                {% if user.is_authenticated %}
+                {% if user.is_staff %}
                     <div class="mt-4">
                         <a href="{% url 'GUSpeedruns:upload_game' %}" class="btn btn-success">Upload Game</a>
                     </div>
