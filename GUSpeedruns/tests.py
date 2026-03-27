@@ -211,3 +211,69 @@ class AuthAndAccountViewTests(TestDataMixin, TestCase):
         self.assertEqual(response.context['profile_user'], profile)
         self.assertIn(run, response.context['runs'])
         self.assertIn(comment, response.context['comments'])
+
+
+# moderator: upload_game/delete run
+class StaffOnlyViewTests(TestDataMixin, TestCase):
+    def test_upload_game_rejects_non_staff_user(self):
+        user, _ = self.create_user_with_profile(username='normaluser', password='normalpass123')
+        self.client.force_login(user)
+
+        response = self.client.get(reverse('GUSpeedruns:upload_game'))
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_upload_game_allows_staff_user_to_create_game(self):
+        staff_user, _ = self.create_user_with_profile(
+            username='staffuser',
+            password='staffpass123',
+            is_staff=True,
+        )
+        self.client.force_login(staff_user)
+
+        response = self.client.post(
+            reverse('GUSpeedruns:upload_game'),
+            {
+                'name': 'Dead Cells',
+                'date_released': '2018-08-07',
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(Game.objects.filter(name='Dead Cells').exists())
+
+    def test_delete_run_requires_staff_to_delete(self):
+        normal_user, normal_profile = self.create_user_with_profile(username='normaluser', password='normalpass123')
+        staff_user, _ = self.create_user_with_profile(
+            username='staffuser',
+            password='staffpass123',
+            is_staff=True,
+        )
+        game = self.create_game(name='Super Meat Boy')
+        run = self.create_run(game=game, profile=normal_profile, seconds=55)
+
+        self.client.force_login(normal_user)
+        response = self.client.post(
+            reverse(
+                'GUSpeedruns:delete_run',
+                kwargs={
+                    'game_name_slug': game.slug_name,
+                    'run_name_slug': run.slug_title,
+                },
+            )
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(Run.objects.filter(id=run.id).exists())
+
+        self.client.force_login(staff_user)
+        response = self.client.post(
+            reverse(
+                'GUSpeedruns:delete_run',
+                kwargs={
+                    'game_name_slug': game.slug_name,
+                    'run_name_slug': run.slug_title,
+                },
+            )
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(Run.objects.filter(id=run.id).exists())
