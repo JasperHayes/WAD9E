@@ -38,7 +38,7 @@ class Game(models.Model):
 class Run(models.Model):
     TITLE_MAX_LENGTH = 100
     URL_ID_LENGTH = 100
-    DESCRIPTION_MAX_LENGTH = 200
+    DESCRIPTION_MAX_LENGTH = 1000
 
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
