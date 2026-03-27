@@ -95,3 +95,50 @@ class ModelTests(TestDataMixin, TestCase):
 
         self.assertEqual(comment.slug_title, 'very-fast-run')
         self.assertEqual(str(comment), 'Very Fast Run')
+
+
+# homepage: search bar and trending games page.
+class HomepageViewTests(TestDataMixin, TestCase):
+    def test_homepage_uses_pagination_nine_per_page(self):
+        for i in range(10):
+            self.create_game(
+                name=f'Game{i}',
+                views=i,
+                release_date=date(2020, 1, min(i + 1, 28)),
+            )
+
+        response = self.client.get(reverse('GUSpeedruns:homepage'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['games']), 9)
+        self.assertEqual(response.context['page_obj'].paginator.num_pages, 2)
+        self.assertEqual(response.context['page_title'], 'Trending Games')
+
+    def test_homepage_search_filters_games_by_name(self):
+        minecraft = self.create_game(name='Minecraft')
+        self.create_game(name='Hollow Knight')
+        self.create_game(name='Portal')
+
+        response = self.client.get(reverse('GUSpeedruns:homepage'), {'q': 'craft'})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['page_title'], 'Search Results')
+        self.assertEqual(response.context['query'], 'craft')
+        self.assertEqual(list(response.context['games']), [minecraft])
+
+    def test_show_game_increments_views_only_once_per_cookie(self):
+        game = self.create_game(name='Terraria', views=0)
+        url = reverse('GUSpeedruns:show_game', kwargs={'game_name_slug': game.slug_name})
+
+        first_response = self.client.get(url)
+        game.refresh_from_db()
+
+        self.assertEqual(first_response.status_code, 200)
+        self.assertEqual(game.views, 1)
+        self.assertIn(f'viewed_game_{game.slug_name}', first_response.cookies)
+
+        second_response = self.client.get(url)
+        game.refresh_from_db()
+
+        self.assertEqual(second_response.status_code, 200)
+        self.assertEqual(game.views, 1)
