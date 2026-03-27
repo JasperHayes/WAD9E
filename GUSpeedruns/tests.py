@@ -62,3 +62,36 @@ class TestDataMixin:
         )
         return comment
 
+
+# model tests for slug and title.
+class ModelTests(TestDataMixin, TestCase):
+    def test_userprofile_save_generates_slug(self):
+        user, profile = self.create_user_with_profile(username='John Smith')
+        profile.refresh_from_db()
+
+        self.assertEqual(profile.slug_name, 'john-smith')
+        self.assertEqual(str(profile), 'John Smith')
+
+    def test_game_save_generates_slug(self):
+        game = self.create_game(name='Hollow Knight')
+
+        self.assertEqual(game.slug_name, 'hollow-knight')
+        self.assertEqual(str(game), 'Hollow Knight')
+
+    def test_run_save_generates_title_and_slug(self):
+        _, profile = self.create_user_with_profile(username='runner1')
+        game = self.create_game(name='Portal')
+        run = self.create_run(game=game, profile=profile, seconds=65)
+
+        expected_title = f"{timedelta(seconds=65)} by runner1"
+        self.assertEqual(run.title, expected_title)
+        self.assertEqual(run.slug_title, slugify(expected_title))
+
+    def test_comment_save_generates_slug(self):
+        _, profile = self.create_user_with_profile(username='commenter')
+        game = self.create_game(name='Celeste')
+        run = self.create_run(game=game, profile=profile, seconds=90)
+        comment = self.create_comment(run=run, profile=profile, title='Very Fast Run')
+
+        self.assertEqual(comment.slug_title, 'very-fast-run')
+        self.assertEqual(str(comment), 'Very Fast Run')
