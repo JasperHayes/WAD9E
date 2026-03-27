@@ -142,3 +142,72 @@ class HomepageViewTests(TestDataMixin, TestCase):
 
         self.assertEqual(second_response.status_code, 200)
         self.assertEqual(game.views, 1)
+
+
+# register/login/my account
+class AuthAndAccountViewTests(TestDataMixin, TestCase):
+    def test_register_creates_user_and_profile(self):
+        response = self.client.post(
+            reverse('GUSpeedruns:register'),
+            {
+                'username': 'newuser',
+                'email': 'newuser@example.com',
+                'password': 'safePassword123',
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['registered'])
+        self.assertTrue(User.objects.filter(username='newuser').exists())
+        self.assertTrue(UserProfile.objects.filter(user__username='newuser').exists())
+
+        created_user = User.objects.get(username='newuser')
+        self.assertTrue(created_user.check_password('safePassword123'))
+
+    def test_user_login_with_valid_credentials_redirects_homepage(self):
+        user, _ = self.create_user_with_profile(username='loginuser', password='loginpass123')
+
+        response = self.client.post(
+            reverse('GUSpeedruns:login'),
+            {
+                'username': 'loginuser',
+                'password': 'loginpass123',
+            },
+        )
+
+        self.assertRedirects(response, reverse('GUSpeedruns:homepage'))
+        self.assertEqual(int(self.client.session['_auth_user_id']), user.id)
+
+    def test_user_login_with_invalid_credentials_sets_invalid_flag(self):
+        self.create_user_with_profile(username='loginuser', password='rightpass123')
+
+        response = self.client.post(
+            reverse('GUSpeedruns:login'),
+            {
+                'username': 'loginuser',
+                'password': 'wrongpass',
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['invalid'])
+        self.assertFalse(response.context['disabled'])
+
+    def test_my_account_requires_login(self):
+        response = self.client.get(reverse('GUSpeedruns:my_account'))
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_my_account_shows_profile_runs_and_comments(self):
+        user, profile = self.create_user_with_profile(username='accountuser', password='accountpass123')
+        game = self.create_game(name='Cuphead')
+        run = self.create_run(game=game, profile=profile, seconds=77)
+        comment = self.create_comment(run=run, profile=profile)
+
+        self.client.force_login(user)
+        response = self.client.get(reverse('GUSpeedruns:my_account'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['profile_user'], profile)
+        self.assertIn(run, response.context['runs'])
+        self.assertIn(comment, response.context['comments'])
