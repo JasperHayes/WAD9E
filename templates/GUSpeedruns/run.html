@@ -43,8 +43,8 @@
                     <div>
                         {% if user.is_authenticated %}
                             <a href="{% url 'GUSpeedruns:add_comment' game_name_slug=game_name_slug run_name_slug=run.slug_title %}" class="btn btn-success pt-2 mt-2">Add Comment</a> <br />
-                            <a href="{% url 'GUSpeedruns:add_run' game_name_slug=game_name_slug %}" class="btn btn-success pt-2 mt-2">Add Run</a> <br />
                         {% endif %}
+                        <a href="{% url 'GUSpeedruns:show_user' user_name_slug=user_name_slug %}" class="btn btn-success pt-2 mt-2">Go To User</a> <br />
                         {% if user.is_staff %}
                             <form method="post" action="{% url 'GUSpeedruns:delete_run' game_name_slug=game_name_slug run_name_slug=run.slug_title %}" class="btn btn-danger mt-2">Delete run</a>
                                 {% csrf_token %}

@@ -259,6 +259,8 @@ def show_run(request, game_name_slug, run_name_slug):
         context_dict['comments'] = comments
         context_dict['game_name_slug'] = game_name_slug
         context_dict['run_name_slug'] = run_name_slug
+        user = run.user
+        context_dict['user_name_slug'] = user.slug_name
         
     
     except:
