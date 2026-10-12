@@ -12,10 +12,11 @@ from django.core.paginator import Paginator
 import re
 import requests
 import isodate
+import os
 from django.http import JsonResponse
 
 #for youtube API
-API_KEY = "AIzaSyCOa_I-kpQZIJXISS5aQ0WrkyGPrz9tvEI"
+API_KEY = os.environ.get("YOUTUBE_API_KEY")
 
 def homepage(request):
     query = request.GET.get('q', '').strip()
